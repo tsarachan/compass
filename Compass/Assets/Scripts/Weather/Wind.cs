@@ -11,6 +11,10 @@ public class Wind : MonoBehaviour {
 	public float speed = 2.0f;
 
 
+	/// <summary>
+	/// Get the wind in a form suitable for applying force to ships.
+	/// </summary>
+	/// <returns>The wind, as a Vector3.</returns>
 	public Vector3 GetWind(){
 		return direction.normalized * speed;
 	}
