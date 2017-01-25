@@ -20,6 +20,9 @@ public abstract class SailingShip : MonoBehaviour {
 	protected Wind windScript;
 	protected const string WEATHER_OBJ = "Weather";
 	protected const string WIND_OBJ = "Wind";
+	protected const string CURRENT_OBJ = "Current";
+	protected bool inCurrent = false;
+	protected Transform current;
 
 
 	/*
@@ -60,14 +63,32 @@ public abstract class SailingShip : MonoBehaviour {
 	/// </summary>
 	/// <returns>The ship's new position.</returns>
 	protected virtual Vector3 MoveForward(){
-		float windEffect = Vector3.Dot(transform.forward, windScript.GetWind()) + dotAdjustment;
+		float weatherEffect = Vector3.Dot(transform.forward, windScript.GetWind()) + dotAdjustment;
+
+		if (inCurrent){
+			weatherEffect += Vector3.Dot(transform.forward, current.GetComponent<Current>().GetCurrent());
+		}
 
 		return transform.position + 
 			   (transform.forward * forwardSpeed * Time.deltaTime) * 
-			   windEffect;
+			   weatherEffect;
 	}
 
 
 	//every ship must define how it turns
 	protected abstract void Turn();
+
+
+	protected virtual void OnTriggerStay(Collider other){
+		if (other.gameObject.name.Contains(CURRENT_OBJ)){
+			inCurrent = true;
+			current = other.transform;
+		}
+	}
+
+	protected virtual void OnTriggerExit(Collider other){
+		if (other.gameObject.name.Contains(CURRENT_OBJ)){
+			inCurrent = false;
+		}
+	}
 }
