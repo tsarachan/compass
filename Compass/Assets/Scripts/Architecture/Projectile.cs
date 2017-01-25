@@ -29,13 +29,14 @@ public class Projectile : ObjectPooling.Poolable {
 
 
 	protected Vector3 MoveForward(){
-		return transform.forward * speed * Time.deltaTime;
+		return transform.position + (transform.forward * speed * Time.deltaTime);
 	}
 
 
 	public virtual void Launch(Vector3 direction, Vector3 position){
-		transform.forward = direction;
+		transform.forward = direction.normalized;
 		transform.position = position;
+		Debug.Log("Projectile position: " + transform.position);
 		Reset();
 	}
 
