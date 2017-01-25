@@ -1,5 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * 
+ * Base class for seagoing vessels.
+ * 
+ */
+using System.Collections;
 using UnityEngine;
 
 public abstract class SailingShip : MonoBehaviour {
@@ -64,5 +68,6 @@ public abstract class SailingShip : MonoBehaviour {
 	}
 
 
+	//every ship must define how it turns
 	protected abstract void Turn();
 }

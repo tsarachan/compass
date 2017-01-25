@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : SailingShip {
@@ -10,11 +9,16 @@ public class PlayerMovement : SailingShip {
 	public KeyCode starboard = KeyCode.RightArrow;
 
 
+	//listen for input, then move in the current direction
 	protected override void Update(){
 		Turn();
 		rb.MovePosition(MoveForward());
 	}
 
+
+	/// <summary>
+	/// Turn to port or starboard if receiving the appropriate input.
+	/// </summary>
 	protected override void Turn(){
 		if (Input.GetKey(port)){
 			transform.Rotate(new Vector3(0.0f, -rotationSpeed * Time.deltaTime, 0.0f));

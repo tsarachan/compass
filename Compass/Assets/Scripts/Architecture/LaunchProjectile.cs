@@ -1,5 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * 
+ * This is a base class for attacking.
+ * 
+ * To create a basic attack, initialize projectileName in Start(), and then call Fire() with any char.
+ * 
+ * Fire() takes a char as an argument so that child classes can use it, if necessary.
+ * 
+ */
+
+using System.Collections;
 using UnityEngine;
 
 public abstract class LaunchProjectile : MonoBehaviour {

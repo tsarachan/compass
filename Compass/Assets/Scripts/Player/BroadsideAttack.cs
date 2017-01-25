@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BroadsideAttack : LaunchProjectile {
@@ -16,11 +15,13 @@ public class BroadsideAttack : LaunchProjectile {
 	private const char PORT_ATTACK = 'P';
 	private const char STARBOARD_ATTACK = 'S';
 
+
+	//initialize variables
 	protected override void Start(){
 		projectileName = CANNONBALL;
 	}
 	
-	// Update is called once per frame
+	//listen for inputs
 	private void Update () {
 		if (Input.GetKeyDown(portFire)){
 			Fire(PORT_ATTACK);
@@ -30,8 +31,11 @@ public class BroadsideAttack : LaunchProjectile {
 	}
 
 
+	/// <summary>
+	/// Fires a cannonball to port or starboard.
+	/// </summary>
+	/// <param name="dir">The direction of the attack, port or starboard.</param>
 	protected override void Fire(char dir){
-		Debug.Log("Vessel position: " + transform.position);
 		GameObject myProjectile = ObjectPooling.ObjectPool.GetObj(CANNONBALL);
 
 		if (dir == PORT_ATTACK){
