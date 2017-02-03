@@ -17,6 +17,7 @@ public class Circler : EnemyShip {
 		movementFunction = ChooseDirection;
 
 		Turn();
+
 		base.Update();
 	}
 

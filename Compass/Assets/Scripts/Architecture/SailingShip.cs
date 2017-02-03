@@ -44,6 +44,15 @@ public abstract class SailingShip : MonoBehaviour {
 	private int defaultDamage = 1;
 
 
+	//current health--this is the variable that's moved and tracked during the game
+	private int currentHealth = 0;
+
+
+	//variables used to light fires as damage is taken
+	private Transform fires;
+	private const string FIRES = "Fires";
+
+
 	//variables relating to audio
 	private AudioSource audioSource;
 
@@ -75,6 +84,8 @@ public abstract class SailingShip : MonoBehaviour {
 		rb = GetComponent<Rigidbody>();
 		damageValues = ShuffleList(damageValues);
 		audioSource = GetComponent<AudioSource>();
+		currentHealth = health;
+		fires = transform.Find(FIRES);
 	}
 
 	#region movement
@@ -138,26 +149,46 @@ public abstract class SailingShip : MonoBehaviour {
 	/// it will take no damage most of the time, but one random hit will be a critical hit that destroys it.
 	/// </summary>
 	public virtual void GetHit(){
-		Debug.Log(gameObject.name + " got hit");
-
 		if (damageValues.Count > 0){
-			health -= damageValues[0];
-			damageValues.Remove(0);
+			currentHealth -= damageValues[0];
+			damageValues.RemoveAt(0);
 		} else {
-			health -= defaultDamage;
+			currentHealth -= defaultDamage;
 		}
+			
+		SetFires();
 
-		if (health <= 0){
+		if (currentHealth <= 0){
 			GetDestroyed();
 		}
 	}
 
 
-	protected void GetDestroyed(){
-		if (!audioSource.isPlaying){
-			audioSource.clip = destroyedClip;
-			audioSource.Play();
+	/// <summary>
+	/// Turn fires on to provide feedback for amount of damage taken.
+	/// 
+	/// 0 - 25%: 1 fire
+	/// 26 - 50%: 2 fires
+	/// 51 - 75%: 3 fires
+	/// </summary>
+	protected void SetFires(){
+		if ((float)currentHealth/health >= 0.75f){
+			fires.GetChild(0).gameObject.SetActive(true);
+		} else if ((float)currentHealth/health >= 0.5f){
+			fires.GetChild(1).gameObject.SetActive(true);
+		} else if ((float)currentHealth/health >= 0.25f){
+			fires.GetChild(2).gameObject.SetActive(true);
 		}
+	}
+
+
+	protected void GetDestroyed(){
+		Debug.Log("GetDestroyed() called");
+
+//		if (!audioSource.isPlaying){
+//			audioSource.clip = destroyedClip;
+//			audioSource.Play();
+//		}
 	}
 
 	#endregion

@@ -82,12 +82,14 @@ public class Projectile : ObjectPooling.Poolable {
 
 
 	protected void OnTriggerEnter(Collider other){
-		if (other.gameObject.tag != gameObject.tag &&
-			(other.gameObject.tag == PLAYER_TAG ||
-			other.gameObject.tag == ENEMY_TAG)){
-			other.gameObject.GetComponent<SailingShip>().GetHit();
+		if (other.gameObject.name != gameObject.name){ //discard collisions between cannonballs
+			if (other.gameObject.tag != gameObject.tag &&
+				(other.gameObject.tag == PLAYER_TAG ||
+				other.gameObject.tag == ENEMY_TAG)){
+				other.gameObject.GetComponent<SailingShip>().GetHit();
 
-			BackToPool();
+				BackToPool();
+			}
 		}
 	}
 
