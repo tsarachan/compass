@@ -34,8 +34,12 @@ public class EnemyShip : SailingShip {
 			closestCurrent = FindClosestCurrent();
 		}
 
+		Debug.Log("the closest current: " + closestCurrent);
 
-		return Vector3.RotateTowards(transform.forward, closestCurrent.position, rotationSpeed, 0.0f);
+		return Vector3.RotateTowards(transform.forward,
+									 (closestCurrent.position - transform.position).normalized,
+									 rotationSpeed,
+									 0.0f);
 	}
 
 
@@ -57,6 +61,7 @@ public class EnemyShip : SailingShip {
 			return temp;
 		}
 	}
+
 
 	protected override void OnTriggerStay(Collider other){
 		Debug.Log("Encountered a trigger");

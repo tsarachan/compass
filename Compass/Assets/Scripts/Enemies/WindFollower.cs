@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WindFollower : EnemyShip {
 
-	protected void Update(){
+	protected override void Update(){
 		Turn();
 		base.Update();
 	}
