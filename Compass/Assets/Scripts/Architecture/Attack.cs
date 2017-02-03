@@ -6,10 +6,6 @@ public abstract class Attack : MonoBehaviour {
 	//variables relating to the cannonballs the player shoots
 	protected const string CANNONBALL = "Cannonball";
 
-	//player controls
-	protected KeyCode portFire = KeyCode.A;
-	protected KeyCode starboardFire = KeyCode.S;
-
 
 	//internal variables
 	protected const char PORT_ATTACK = 'P';

@@ -64,9 +64,7 @@ public class EnemyShip : SailingShip {
 
 
 	protected override void OnTriggerStay(Collider other){
-		Debug.Log("Encountered a trigger");
 		if (other.gameObject.name.Contains(CURRENT_OBJ)){
-			Debug.Log("The trigger is a current");
 			inCurrent = true;
 			current = other.transform;
 			closestCurrent = null;
