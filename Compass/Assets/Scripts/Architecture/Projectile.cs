@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/*
+ * 
+ * Base class for projectiles such as cannonballs.
+ * 
+ */
+using System.Collections;
 using UnityEngine;
 
 public class Projectile : ObjectPooling.Poolable {
@@ -76,11 +81,15 @@ public class Projectile : ObjectPooling.Poolable {
 
 	//reset this projectile when it comes out of the object pool
 	public override void Reset(){
-		timer = 0.0f;
+		timer = 0.0f; //sanity check to make sure the cannonball remains in existence for its full lifetime
 		base.Reset();
 	}
 
 
+	/// <summary>
+	/// Handle hitting another object.
+	/// </summary>
+	/// <param name="other">The collider struck.</param>
 	protected void OnTriggerEnter(Collider other){
 		if (other.gameObject.name != gameObject.name){ //discard collisions between cannonballs
 			if (other.gameObject.tag != gameObject.tag &&
@@ -94,6 +103,9 @@ public class Projectile : ObjectPooling.Poolable {
 	}
 
 
+	/// <summary>
+	/// Centralizes the process for putting the cannonball back in the object pool.
+	/// </summary>
 	protected void BackToPool(){
 		timer = 0.0f;
 		ObjectPooling.ObjectPool.AddObj(gameObject);

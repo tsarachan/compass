@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/*
+ * 
+ * This class handles the player's inputs for attacking.
+ * 
+ */
+using System.Collections;
 using UnityEngine;
 
 public class PlayerAttack : Attack {
@@ -13,10 +18,13 @@ public class PlayerAttack : Attack {
 	private const string CANNON_PORT = "Cannon port";
 
 
+	//initialize variables
 	private void Start(){
 		cannonPort = transform.Find(CANNON_PORT);
 	}
 
+
+	//detect input, and attack accordingly
 	protected override void Update(){
 		if (Input.GetKeyDown(portFire)){
 			Fire(PORT_ATTACK, cannonPort.position);

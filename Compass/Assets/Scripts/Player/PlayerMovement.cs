@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/*
+ * 
+ * Handle input for player turns.
+ * 
+ */
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : SailingShip {
