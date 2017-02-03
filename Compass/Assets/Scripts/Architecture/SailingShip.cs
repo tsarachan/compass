@@ -183,7 +183,6 @@ public abstract class SailingShip : MonoBehaviour {
 
 
 	protected void GetDestroyed(){
-		Debug.Log("GetDestroyed() called");
 
 //		if (!audioSource.isPlaying){
 //			audioSource.clip = destroyedClip;
