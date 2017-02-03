@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Projectile : ObjectPooling.Poolable {
 
+	//----------Tunable variables----------
+
 	//how fast the projectile moves
 	public float speed = 1.0f;
 
@@ -11,9 +13,14 @@ public class Projectile : ObjectPooling.Poolable {
 	protected float timer = 0.0f;
 
 
-	//internal variables
+	//----------Internal variables----------
+
 	protected Rigidbody rb;
 	protected const string PROJECTILE_ORGANIZER = "Projectiles";
+
+	//tags for determining when this projectile has hit a ship
+	protected const string PLAYER_TAG = "Player";
+	protected const string ENEMY_TAG = "Enemy";
 
 
 	//initialize variables
@@ -47,7 +54,6 @@ public class Projectile : ObjectPooling.Poolable {
 	public virtual void Launch(Vector3 direction, Vector3 position){
 		transform.forward = direction.normalized;
 		transform.position = position;
-		Debug.Log("Projectile position: " + transform.position);
 		Reset();
 	}
 
@@ -61,8 +67,7 @@ public class Projectile : ObjectPooling.Poolable {
 		float temp = timer + Time.deltaTime;
 
 		if (temp >= lifetime){
-			ObjectPooling.ObjectPool.AddObj(gameObject);
-			temp = 0.0f;
+			BackToPool();
 		}
 
 		return temp;
@@ -73,5 +78,22 @@ public class Projectile : ObjectPooling.Poolable {
 	public override void Reset(){
 		timer = 0.0f;
 		base.Reset();
+	}
+
+
+	protected void OnTriggerEnter(Collider other){
+		if (other.gameObject.tag != gameObject.tag &&
+			(other.gameObject.tag == PLAYER_TAG ||
+			other.gameObject.tag == ENEMY_TAG)){
+			other.gameObject.GetComponent<SailingShip>().GetHit();
+
+			BackToPool();
+		}
+	}
+
+
+	protected void BackToPool(){
+		timer = 0.0f;
+		ObjectPooling.ObjectPool.AddObj(gameObject);
 	}
 }

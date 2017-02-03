@@ -34,8 +34,6 @@ public class EnemyShip : SailingShip {
 			closestCurrent = FindClosestCurrent();
 		}
 
-		Debug.Log("the closest current: " + closestCurrent);
-
 		return Vector3.RotateTowards(transform.forward,
 									 (closestCurrent.position - transform.position).normalized,
 									 rotationSpeed,

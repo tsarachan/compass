@@ -4,9 +4,13 @@
  * 
  */
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class SailingShip : MonoBehaviour {
+
+	//----------Tunable variables----------
+
 
 	//how fast the ship moves, before considering weather effects
 	public float forwardSpeed = 1.0f;
@@ -16,6 +20,17 @@ public abstract class SailingShip : MonoBehaviour {
 	public float rotationSpeed = 10.0f;
 
 
+	//variables used for taking damage. See GetHit(), below.
+	public int health = 10;
+	public List<int> damageValues = new List<int>();
+
+
+	//audio clips
+	public AudioClip destroyedClip;
+
+
+	//----------Internal variables----------
+
 	//variables for accessing the current state of the weather
 	protected Wind windScript;
 	protected const string WEATHER_OBJ = "Weather";
@@ -24,6 +39,16 @@ public abstract class SailingShip : MonoBehaviour {
 	protected bool inCurrent = false;
 	protected Transform current;
 
+
+	//default damage when something is wrong with damageValues
+	private int defaultDamage = 1;
+
+
+	//variables relating to audio
+	private AudioSource audioSource;
+
+
+	//variables for movement
 
 	/*
 	 * 
@@ -41,7 +66,6 @@ public abstract class SailingShip : MonoBehaviour {
 	public float dotAdjustment = 1.0f;
 
 
-	//internal variables
 	protected Rigidbody rb;
 
 
@@ -49,8 +73,11 @@ public abstract class SailingShip : MonoBehaviour {
 	protected virtual void Start(){
 		windScript = transform.root.Find(WEATHER_OBJ).GetComponent<Wind>();
 		rb = GetComponent<Rigidbody>();
+		damageValues = ShuffleList(damageValues);
+		audioSource = GetComponent<AudioSource>();
 	}
 
+	#region movement
 
 	//move ship in the direction it is facing
 	protected virtual void Update(){
@@ -78,7 +105,12 @@ public abstract class SailingShip : MonoBehaviour {
 	//every ship must define how it turns
 	protected abstract void Turn();
 
+	#endregion
 
+
+	#region current trackers
+
+	//keeps track of whether the ship is in current
 	protected virtual void OnTriggerStay(Collider other){
 		if (other.gameObject.name.Contains(CURRENT_OBJ)){
 			inCurrent = true;
@@ -86,9 +118,61 @@ public abstract class SailingShip : MonoBehaviour {
 		}
 	}
 
+	//handles leaving current
 	protected virtual void OnTriggerExit(Collider other){
 		if (other.gameObject.name.Contains(CURRENT_OBJ)){
 			inCurrent = false;
 		}
+	}
+
+	#endregion
+
+
+	#region combat
+	/// <summary>
+	/// Call this function whenever a ship takes damage.
+	/// 
+	/// When a ship is hit, it chooses the next value in a shuffled list as the amount of damage to take.
+	/// This makes it possible to take damage unevenly. If every value in the list is 1, the ship will always
+	/// take the same amount of damage. If the list is all zeroes and then one value equal to the ship's health,
+	/// it will take no damage most of the time, but one random hit will be a critical hit that destroys it.
+	/// </summary>
+	public virtual void GetHit(){
+		Debug.Log(gameObject.name + " got hit");
+
+		if (damageValues.Count > 0){
+			health -= damageValues[0];
+			damageValues.Remove(0);
+		} else {
+			health -= defaultDamage;
+		}
+
+		if (health <= 0){
+			GetDestroyed();
+		}
+	}
+
+
+	protected void GetDestroyed(){
+		if (!audioSource.isPlaying){
+			audioSource.clip = destroyedClip;
+			audioSource.Play();
+		}
+	}
+
+	#endregion
+
+
+	//utility function to shuffle a list's entries
+	//uses the Fisher-Yates algorithm
+	private List<int> ShuffleList(List<int> list){
+		for (int i = 0; i < list.Count; i++) {
+			int temp = list[i];
+			int randomIndex = Random.Range(i, list.Count);
+			list[i] = list[randomIndex];
+			list[randomIndex] = temp;
+		}
+
+		return list;
 	}
 }

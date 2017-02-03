@@ -19,10 +19,14 @@ public class EnemyAttack : Attack {
 	private const string PLAYER_OBJ = "Player ship";
 	private Transform player;
 
+	private Transform cannonPort;
+	private const string CANNON_PORT = "Cannon port";
+
 
 	//initialize variables
 	private void Start(){
 		player = GameObject.Find(PLAYER_OBJ).transform;
+		cannonPort = transform.Find(CANNON_PORT);
 	}
 
 
@@ -40,9 +44,9 @@ public class EnemyAttack : Attack {
 	//determine whether the player is to the left or right, and fire accordingly
 	private void ChooseAttack(){
 		if (transform.InverseTransformPoint(player.position).x < 0.0f){
-			Fire(PORT_ATTACK);
+			Fire(PORT_ATTACK, cannonPort.position);
 		} else if (transform.InverseTransformPoint(player.position).x > 0.0f){
-			Fire(STARBOARD_ATTACK);
+			Fire(STARBOARD_ATTACK, cannonPort.position);
 		}
 	}
 }
