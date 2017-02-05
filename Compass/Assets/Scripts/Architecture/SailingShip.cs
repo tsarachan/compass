@@ -31,6 +31,10 @@ public abstract class SailingShip : MonoBehaviour {
 
 	//----------Internal variables----------
 
+
+	//used to track whether this ship is alive
+	protected bool destroyed = false;
+
 	//variables for accessing the current state of the weather
 	protected Wind windScript;
 	protected const string WEATHER_OBJ = "Weather";
@@ -41,20 +45,20 @@ public abstract class SailingShip : MonoBehaviour {
 
 
 	//default damage when something is wrong with damageValues
-	private int defaultDamage = 1;
+	protected int defaultDamage = 1;
 
 
 	//current health--this is the variable that's moved and tracked during the game
-	private int currentHealth = 0;
+	protected int currentHealth = 0;
 
 
 	//variables used to light fires as damage is taken
-	private Transform fires;
-	private const string FIRES = "Fires";
+	protected Transform fires;
+	protected const string FIRES = "Fires";
 
 
 	//variables relating to audio
-	private AudioSource audioSource;
+	protected AudioSource audioSource;
 
 
 	//variables for movement
@@ -93,6 +97,10 @@ public abstract class SailingShip : MonoBehaviour {
 	//move ship in the direction it is facing
 	protected virtual void Update(){
 		rb.MovePosition(MoveForward());
+
+		if (destroyed && !audioSource.isPlaying){
+			Destroy(gameObject);
+		}
 	}
 
 
@@ -184,10 +192,12 @@ public abstract class SailingShip : MonoBehaviour {
 
 	protected void GetDestroyed(){
 
-//		if (!audioSource.isPlaying){
-//			audioSource.clip = destroyedClip;
-//			audioSource.Play();
-//		}
+		if (!audioSource.isPlaying){
+			audioSource.clip = destroyedClip;
+			audioSource.Play();
+		}
+
+		destroyed = true;
 	}
 
 	#endregion

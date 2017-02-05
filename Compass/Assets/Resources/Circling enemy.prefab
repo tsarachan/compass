@@ -1412,6 +1412,6 @@ MonoBehaviour:
   rotationSpeed: 0.01
   health: 4
   damageValues: 01000000010000000100000001000000
-  destroyedClip: {fileID: 0}
+  destroyedClip: {fileID: 8300000, guid: 285c8924f86fd4e50b20912683d960e7, type: 3}
   dotAdjustment: 1
   edgeBuffer: 200
