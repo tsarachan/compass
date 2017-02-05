@@ -17,7 +17,9 @@ public class PlayerMovement : SailingShip {
 	//listen for input, then move in the current direction
 	protected override void Update(){
 		Turn();
-		rb.MovePosition(MoveForward());
+
+
+		base.Update();
 	}
 
 

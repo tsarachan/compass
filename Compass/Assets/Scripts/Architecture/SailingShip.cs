@@ -29,6 +29,10 @@ public abstract class SailingShip : MonoBehaviour {
 	public AudioClip destroyedClip;
 
 
+	//how quickly the boat moves downward when sinking
+	public float sinkSpeed = 0.01f;
+
+
 	//----------Internal variables----------
 
 
@@ -77,8 +81,6 @@ public abstract class SailingShip : MonoBehaviour {
 	 * 
 	 */
 	public float dotAdjustment = 1.0f;
-
-
 	protected Rigidbody rb;
 
 
@@ -96,9 +98,11 @@ public abstract class SailingShip : MonoBehaviour {
 
 	//move ship in the direction it is facing
 	protected virtual void Update(){
-		rb.MovePosition(MoveForward());
-
-		if (destroyed && !audioSource.isPlaying){
+		if (!destroyed){
+			rb.MovePosition(MoveForward());
+		} else if (destroyed && audioSource.isPlaying){
+			rb.MovePosition(transform.position + -Vector3.up * sinkSpeed);
+		} else {
 			Destroy(gameObject);
 		}
 	}
