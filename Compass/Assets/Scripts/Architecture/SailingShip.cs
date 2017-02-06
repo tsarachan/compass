@@ -33,11 +33,20 @@ public abstract class SailingShip : MonoBehaviour {
 	public float sinkSpeed = 0.01f;
 
 
+	//how long the ship lasts after being destroyed
+	public float DestroyTime { get; set; }
+
+
 	//----------Internal variables----------
 
 
-	//used to track whether this ship is alive
-	protected bool destroyed = false;
+	public int MyNum { get; set; }
+
+
+	//used to track whether this ship is alive, and to handle its destruction
+	public bool Sinking { get; set; }
+	protected LevelManager levelManager;
+	protected const string GAME_MANAGER = "Game manager";
 
 	//variables for accessing the current state of the weather
 	protected Wind windScript;
@@ -92,18 +101,19 @@ public abstract class SailingShip : MonoBehaviour {
 		audioSource = GetComponent<AudioSource>();
 		currentHealth = health;
 		fires = transform.Find(FIRES);
+		DestroyTime = destroyedClip.length;
+		levelManager = GameObject.Find(GAME_MANAGER).GetComponent<LevelManager>();
+		Sinking = false;
 	}
 
 	#region movement
 
 	//move ship in the direction it is facing
 	protected virtual void Update(){
-		if (!destroyed){
+		if (!Sinking){
 			rb.MovePosition(MoveForward());
-		} else if (destroyed && audioSource.isPlaying){
+		} else if (Sinking && audioSource.isPlaying){
 			rb.MovePosition(transform.position + -Vector3.up * sinkSpeed);
-		} else {
-			Destroy(gameObject);
 		}
 	}
 
@@ -201,7 +211,7 @@ public abstract class SailingShip : MonoBehaviour {
 			audioSource.Play();
 		}
 
-		destroyed = true;
+		levelManager.DestroyShip(gameObject);
 	}
 
 	#endregion

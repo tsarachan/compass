@@ -13,6 +13,9 @@ public class LevelManager : MonoBehaviour {
 	//this keeps track of all enemies currently in the scene
 	private List<GameObject> activeEnemies = new List<GameObject>();
 
+	//this is for enemies that need to be destroyed
+	private List<ShipToDestroy> destroyedShips = new List<ShipToDestroy>();
+
 
 	//names of enemies; used to populate waves
 	private const string CIRCLER = "Circling enemy";
@@ -79,6 +82,12 @@ public class LevelManager : MonoBehaviour {
 	/// this function dequeues the current wave.
 	/// </summary>
 	private void Update(){
+		GetEnemies();
+		DestroyShips();
+	}
+
+
+	private void GetEnemies(){
 		timer += Time.deltaTime;
 
 		if (timer >= waves.Peek().Rate){
@@ -95,13 +104,40 @@ public class LevelManager : MonoBehaviour {
 
 			timer = 0.0f;
 		}
-			
+
 		if (activeEnemies.Count == 0){
 			if (waves.Peek().enemies.Count <= 0){
 				waves.Dequeue();
 			}
 		}
-	} 
+	}
+
+
+	private void DestroyShips(){
+		for (int i = destroyedShips.Count - 1; i >= 0; i--){
+			if (Time.time >= destroyedShips[i].DestroyTime){
+				Destroy(destroyedShips[i].Ship);
+				destroyedShips.RemoveAt(i);
+			}
+		}
+	}
+
+
+	/// <summary>
+	/// When an enemy registers that it's been destroyed, it calls this function 
+	/// </summary>
+	/// <param name="enemy">Enemy.</param>
+	public void DestroyShip(GameObject enemy){
+		if (activeEnemies.Contains(enemy)){
+			activeEnemies.Remove(enemy);
+		}
+
+
+		//tell the ship it's been destroyed, so it moves accordingly
+		enemy.GetComponent<SailingShip>().Sinking = true;
+
+		destroyedShips.Add(new ShipToDestroy(enemy, Time.time + enemy.GetComponent<SailingShip>().DestroyTime));
+	}
 
 
 	/// <summary>
@@ -118,6 +154,17 @@ public class LevelManager : MonoBehaviour {
 			this.enemies = enemies;
 			this.Rate = rate;
 			this.Spawner = spawner;
+		}
+	}
+
+
+	private class ShipToDestroy{
+		public GameObject Ship { get; set; }
+		public float DestroyTime { get; set; }
+
+		public ShipToDestroy(GameObject ship, float time){
+			this.Ship = ship;
+			this.DestroyTime = time;
 		}
 	}
 }
