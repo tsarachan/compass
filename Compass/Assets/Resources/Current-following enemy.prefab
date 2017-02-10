@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114732049736612204}
   - component: {fileID: 82953124576694970}
   - component: {fileID: 114912514512462002}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Current-following enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 4303519582624454}
   - component: {fileID: 33524658833751488}
   - component: {fileID: 23293303897839784}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: logs1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +56,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4046488612379170}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Fire 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 4373413344843624}
   - component: {fileID: 33205378756308942}
   - component: {fileID: 23749634415546294}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: stones
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 4942119294960914}
   - component: {fileID: 33073650952293928}
   - component: {fileID: 23030124387460248}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 4176635656934572}
   - component: {fileID: 33658534881080880}
   - component: {fileID: 23883111936453732}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fire0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122,7 +122,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4396800670984822}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Fire 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 4252841652311424}
   - component: {fileID: 33506199627297344}
   - component: {fileID: 23721982908674980}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fire0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -156,7 +156,7 @@ GameObject:
   - component: {fileID: 4034584092428120}
   - component: {fileID: 33836303331501420}
   - component: {fileID: 23428698143574006}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 4795436044616212}
   - component: {fileID: 33147787755989998}
   - component: {fileID: 23253975261059360}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4751409495533106}
   - component: {fileID: 108266209690142842}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point light (Middle Fire)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,7 +205,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4020356229356284}
   - component: {fileID: 108107554620659216}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point light (Middle Fire)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 4933133397359148}
   - component: {fileID: 33387614201082790}
   - component: {fileID: 23269576461267018}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: stones
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +237,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4233851292689570}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Fire 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -254,7 +254,7 @@ GameObject:
   - component: {fileID: 4287482104512274}
   - component: {fileID: 33389535617954806}
   - component: {fileID: 23695504607474878}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fire0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -270,7 +270,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4905877613006962}
   - component: {fileID: 108634137561949686}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point light (Middle Fire)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -285,7 +285,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4225960256972894}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cannon port
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -302,7 +302,7 @@ GameObject:
   - component: {fileID: 4277090816413426}
   - component: {fileID: 33493274765171668}
   - component: {fileID: 23720661037952710}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: logs1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 4330906189045328}
   - component: {fileID: 33057768235798240}
   - component: {fileID: 23869809856038344}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: stones
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -334,7 +334,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4148296440163334}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Fires
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -351,7 +351,7 @@ GameObject:
   - component: {fileID: 4366867078388802}
   - component: {fileID: 33586340337391418}
   - component: {fileID: 23331113671499836}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -368,7 +368,7 @@ GameObject:
   - component: {fileID: 4203364479834958}
   - component: {fileID: 33150644342275434}
   - component: {fileID: 23702033787939358}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: logs1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1397,6 +1397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reloadDuration: 1
+  sphereRadius: 1
 --- !u!114 &114912514512462002
 MonoBehaviour:
   m_ObjectHideFlags: 1
