@@ -57,16 +57,27 @@ public class LevelManager : MonoBehaviour {
 		List<GameObject> wave1List = new List<GameObject> { Resources.Load(WIND_FOLLOWER) as GameObject,
 															Resources.Load(WIND_FOLLOWER) as GameObject,
 															Resources.Load(WIND_FOLLOWER) as GameObject };
+		List<string> wave1Spawners = new List<string> { "West spawner 1", "West spawner 2", "West spawner 3" };
+
+
+
 		List<GameObject> wave2List = new List<GameObject> { Resources.Load(CURRENT_FOLLOWER) as GameObject,
 															Resources.Load(CURRENT_FOLLOWER) as GameObject,
 															Resources.Load(CURRENT_FOLLOWER) as GameObject };
+		List<string> wave2Spawners = new List<string> { "East spawner 1", "East spawner 2", "East spawner 3" };
+
+
+
 		List<GameObject> wave3List = new List<GameObject> { Resources.Load(CIRCLER) as GameObject,
 															Resources.Load(CIRCLER) as GameObject,
 															Resources.Load(CIRCLER) as GameObject };
+		List<string> wave3Spawners = new List<string> { "South spawner 1", "South spawner 2", "South spawner 3" };
 
-		waves.Enqueue(new Wave(wave1List, timeBetweenShips, westSpawner));
-		waves.Enqueue(new Wave(wave2List, timeBetweenShips, eastSpawner));
-		waves.Enqueue(new Wave(wave3List, timeBetweenShips, southSpawner));
+
+
+		waves.Enqueue(new Wave(wave1List, timeBetweenShips, wave1Spawners));
+		waves.Enqueue(new Wave(wave2List, timeBetweenShips, wave2Spawners));
+		waves.Enqueue(new Wave(wave3List, timeBetweenShips, wave3Spawners));
 	}
 
 
@@ -93,13 +104,14 @@ public class LevelManager : MonoBehaviour {
 		if (timer >= waves.Peek().Rate){
 			if (waves.Peek().enemies.Count > 0){
 				GameObject newEnemy = Instantiate(waves.Peek().enemies[0],
-												  waves.Peek().Spawner.position,
+												  GameObject.Find(waves.Peek().spawners[0]).transform.position,
 												  Quaternion.identity,
 												  enemyOrganizer) as GameObject;
 
 				activeEnemies.Add(newEnemy);
 
 				waves.Peek().enemies.RemoveAt(0);
+				waves.Peek().spawners.RemoveAt(0);
 			}
 
 			timer = 0.0f;
@@ -147,13 +159,13 @@ public class LevelManager : MonoBehaviour {
 
 		public List<GameObject> enemies = new List<GameObject>(); //the enemies that will be created
 		public float Rate { get; set; } //how many seconds will pass between each enemy
-		public Transform Spawner { get; set; }
+		public List<string> spawners = new List<string>(); //the spawners where enemies will be created
 
 
-		public Wave(List<GameObject> enemies, float rate, Transform spawner){
+		public Wave(List<GameObject> enemies, float rate, List<string> spawners){
 			this.enemies = enemies;
 			this.Rate = rate;
-			this.Spawner = spawner;
+			this.spawners = spawners;
 		}
 	}
 
