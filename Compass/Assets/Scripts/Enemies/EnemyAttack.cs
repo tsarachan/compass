@@ -33,10 +33,11 @@ public class EnemyAttack : Attack {
 
 
 	//initialize variables
-	private void Start(){
+	protected override void Start(){
 		player = GameObject.Find(PLAYER_OBJ).transform;
 		cannonPort = transform.Find(CANNON_PORT);
 		enemyLayerMask = 1 << enemyLayer; //bitwise math to create a layermask
+		base.Start();
 	}
 
 
@@ -73,7 +74,6 @@ public class EnemyAttack : Attack {
 					return;
 				}
 			}
-
 
 			Fire(STARBOARD_ATTACK, cannonPort.position);
 		}

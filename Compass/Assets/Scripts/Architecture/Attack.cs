@@ -8,6 +8,12 @@ using UnityEngine;
 
 public abstract class Attack : MonoBehaviour {
 
+	//----------tunable variables----------
+	public float minCannonPitch = 0.5f;
+	public float maxCannonPitch = 1.5f;
+	public float minCannonVolume = 0.25f;
+	public float maxCannonVolume = 1.0f;
+
 
 	//----------internal variables----------
 	protected const char PORT_ATTACK = 'P';
@@ -16,6 +22,17 @@ public abstract class Attack : MonoBehaviour {
 
 	//variables relating to the cannonballs the player shoots
 	protected const string CANNONBALL = "Cannonball";
+
+
+	//for playing a sound when ships attack
+	protected AudioClip cannonSound;
+	protected AudioSource audioSource;
+
+
+	protected virtual void Start(){
+		cannonSound = Resources.Load("Audio/SFX/Cannon") as AudioClip;
+		audioSource = GetComponent<AudioSource>();
+	}
 
 	
 	//use the update loop to direct each ship to attack
@@ -38,5 +55,16 @@ public abstract class Attack : MonoBehaviour {
 		} else {
 			Debug.Log("Illegal dir: " + dir);
 		}
+
+		if (!audioSource.isPlaying){
+			PlayVariableSound(cannonSound);
+		}
+	}
+
+	protected void PlayVariableSound(AudioClip clip){
+		audioSource.pitch = Random.Range(minCannonPitch, maxCannonPitch);
+		audioSource.volume = Random.Range(minCannonVolume, maxCannonVolume);
+		audioSource.clip = clip;
+		audioSource.Play();
 	}
 }

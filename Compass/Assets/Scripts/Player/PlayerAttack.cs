@@ -19,8 +19,9 @@ public class PlayerAttack : Attack {
 
 
 	//initialize variables
-	private void Start(){
+	protected override void Start(){
 		cannonPort = transform.Find(CANNON_PORT);
+		base.Start();
 	}
 
 
