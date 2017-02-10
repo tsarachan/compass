@@ -665,7 +665,7 @@ ParticleSystem:
     enabled: 1
     type: 4
     radius: 0.01
-    angle: 25
+    angle: 10
     length: 5
     boxX: 1
     boxY: 1
@@ -1024,19 +1024,19 @@ ParticleSystem:
       maxGradient:
         key0:
           serializedVersion: 2
-          rgba: 2134436351
+          rgba: 2132746048
         key1:
           serializedVersion: 2
-          rgba: 1090555647
+          rgba: 1094598228
         key2:
           serializedVersion: 2
-          rgba: 1090519267
+          rgba: 1098348436
         key3:
           serializedVersion: 2
-          rgba: 11513001
+          rgba: 14209483
         key4:
           serializedVersion: 2
-          rgba: 14079702
+          rgba: 14211288
         key5:
           serializedVersion: 2
           rgba: 65793
@@ -1046,7 +1046,7 @@ ParticleSystem:
         key7:
           serializedVersion: 2
           rgba: 0
-        ctime0: 0
+        ctime0: 771
         ctime1: 16384
         ctime2: 32960
         ctime3: 43176
@@ -1649,7 +1649,7 @@ ParticleSystem:
     inWorldSpace: 0
     dampen: 1
   NoiseModule:
-    enabled: 0
+    enabled: 1
     strength:
       scalar: 1
       maxCurve:
