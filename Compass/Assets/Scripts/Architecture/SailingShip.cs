@@ -93,6 +93,13 @@ public abstract class SailingShip : MonoBehaviour {
 	protected Rigidbody rb;
 
 
+	public float boundaryLeeway = 2.0f;
+	protected float xBound = 0.0f;
+	protected float zBound = 0.0f;
+	protected const string EAST_SPAWNER = "East spawner 1";
+	protected const string SOUTH_SPAWNER = "South spawner 1";
+
+
 	//initialize variables
 	protected virtual void Start(){
 		windScript = transform.root.Find(WEATHER_OBJ).GetComponent<Wind>();
@@ -104,16 +111,28 @@ public abstract class SailingShip : MonoBehaviour {
 		DestroyTime = destroyedClip.length;
 		levelManager = GameObject.Find(GAME_MANAGER).GetComponent<LevelManager>();
 		Sinking = false;
+		xBound = GameObject.Find(EAST_SPAWNER).transform.position.x + boundaryLeeway;
+		zBound = Mathf.Abs(GameObject.Find(SOUTH_SPAWNER).transform.position.z - boundaryLeeway);
 	}
 
 	#region movement
 
-	//move ship in the direction it is facing
+	/// <summary>
+	/// Move the ship in the direction it is facing, and then check to make sure it is still in-bounds. If
+	/// the ship has moved beyond the set bounds, destroy it.
+	/// </summary>
 	protected virtual void Update(){
 		if (!Sinking){
 			rb.MovePosition(MoveForward());
 		} else if (Sinking && audioSource.isPlaying){
 			rb.MovePosition(transform.position + -Vector3.up * sinkSpeed);
+		}
+
+		if (transform.position.x > xBound ||
+			transform.position.x < -xBound ||
+			transform.position.z > zBound ||
+			transform.position.z < -zBound){
+			levelManager.DestroyShip(gameObject);
 		}
 	}
 
