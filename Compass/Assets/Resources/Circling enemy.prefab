@@ -1201,8 +1201,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 2.33, z: 1.46}
-  m_Center: {x: 0, y: 0.72, z: 0.03}
+  m_Size: {x: 1, y: 7, z: 1.46}
+  m_Center: {x: 0, y: -1.55, z: 0.03}
 --- !u!82 &82377841543435356
 AudioSource:
   m_ObjectHideFlags: 1
@@ -1396,6 +1396,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a218e0d4a4c8043e0b48280a8381a151, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minCannonPitch: 0.5
+  maxCannonPitch: 1.5
+  minCannonVolume: 0.1
+  maxCannonVolume: 0.3
   reloadDuration: 1
   sphereRadius: 1
 --- !u!114 &114649131018750158
@@ -1416,4 +1420,5 @@ MonoBehaviour:
   destroyedClip: {fileID: 8300000, guid: 285c8924f86fd4e50b20912683d960e7, type: 3}
   sinkSpeed: 0.02
   dotAdjustment: 1
+  boundaryLeeway: 2
   edgeBuffer: 200
