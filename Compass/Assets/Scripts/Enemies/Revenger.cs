@@ -34,18 +34,30 @@ public class Revenger : EnemyAttack {
 
 		powerUpFunc = new ShipSinkEvent.Handler(PowerUpFunc);
 		EventManager.Instance.Register<ShipSinkEvent>(powerUpFunc);
-		EventManager.Instance.Fire(new ShipSinkEvent(GetComponent<SailingShip>()));
 	}
 
 
+	/// <summary>
+	/// When this ship is instructed to power up, switch on another bank of cannons if any are available.
+	/// </summary>
+	/// <param name="e">The event that was published.</param>
 	public void PowerUpFunc(Event e){
-
 		//first: if this ship is going to be destroyed, unregister to avoid errors
 		if (e.GetType().Name == SINK_EVENT_NAME){
 			ShipSinkEvent sinkEvent = e as ShipSinkEvent;
 
 			if (sinkEvent.ship == gameObject.GetComponent<SailingShip>()){
 				EventManager.Instance.Unregister<ShipSinkEvent>(powerUpFunc);
+			}
+		}
+
+		//second: go through the dictionary of ports. If one is turned off, switch it on and then stop.
+		foreach (Transform port in ports.Keys){
+			if (ports[port] == false){
+				ports[port] = true;
+				Debug.Log("Setting " + port + " to " + ports[port]);
+
+				return;
 			}
 		}
 	}
