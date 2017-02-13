@@ -1,10 +1,16 @@
-﻿using System.Collections;
+﻿/*
+ * 
+ * This is a variant of EnemyAttack that powers up as other enemies are sunk. Each sunk enemy causes this enemy
+ * to fire an additional cannonball with each broadside, up to three cannonballs.
+ * 
+ */
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Revenger : EnemyAttack {
 
-
+	//----------Internal variables----------
 
 	//extra cannon ports the revenger ship uses to power up
 	protected Transform cannonPort2;
@@ -20,6 +26,7 @@ public class Revenger : EnemyAttack {
 	private const string SINK_EVENT_NAME = "ShipSinkEvent";
 
 
+	//initialize variables
 	protected override void Start(){
 		base.Start();
 
@@ -62,7 +69,10 @@ public class Revenger : EnemyAttack {
 	}
 
 
-	//determine whether the player is to the left or right, and fire accordingly
+	/// <summary>
+	/// This is the heart of the revenger's powering up: instead of firing one cannonball, the revenger fires
+	/// from every active port. More ports become active as the revenger powers up.
+	/// </summary>
 	protected override void ChooseAttack(){
 		if (transform.InverseTransformPoint(player.position).x < 0.0f){
 			RaycastHit hitInfo;
