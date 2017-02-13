@@ -16,20 +16,20 @@ public class EnemyAttack : Attack {
 
 
 	//variables for reloading
-	private float reloadTimer = 0.0f;
+	protected float reloadTimer = 0.0f;
 
 	//variables used to find the player
-	private const string PLAYER_OBJ = "Player ship";
-	private Transform player;
+	protected const string PLAYER_OBJ = "Player ship";
+	protected Transform player;
 
-	private Transform cannonPort;
-	private const string CANNON_PORT = "Cannon port";
+	protected Transform cannonPort;
+	protected const string CANNON_PORT = "Cannon port";
 
 
 	//these are used to find enemies, so that the enemy ships don't fire on each other
-	private int enemyLayer = 8;
-	private int enemyLayerMask;
-	private const string ENEMY_TAG = "Enemy";
+	protected int enemyLayer = 8;
+	protected int enemyLayerMask;
+	protected const string ENEMY_TAG = "Enemy";
 
 
 	//initialize variables
@@ -53,7 +53,7 @@ public class EnemyAttack : Attack {
 
 
 	//determine whether the player is to the left or right, and fire accordingly
-	private void ChooseAttack(){
+	protected virtual void ChooseAttack(){
 		if (transform.InverseTransformPoint(player.position).x < 0.0f){
 			RaycastHit hitInfo;
 

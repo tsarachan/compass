@@ -127,6 +127,7 @@ public abstract class SailingShip : MonoBehaviour {
 		} else if (Sinking && audioSource.isPlaying){
 			rb.MovePosition(transform.position + -Vector3.up * sinkSpeed);
 		} else if (Sinking){
+			EventManager.Instance.Fire(new ShipSinkEvent(GetComponent<SailingShip>()));
 			Destroy(gameObject);
 		}
 
