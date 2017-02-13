@@ -55,9 +55,46 @@ public class Revenger : EnemyAttack {
 		foreach (Transform port in ports.Keys){
 			if (ports[port] == false){
 				ports[port] = true;
-				Debug.Log("Setting " + port + " to " + ports[port]);
 
 				return;
+			}
+		}
+	}
+
+
+	//determine whether the player is to the left or right, and fire accordingly
+	protected override void ChooseAttack(){
+		if (transform.InverseTransformPoint(player.position).x < 0.0f){
+			RaycastHit hitInfo;
+
+			foreach (Transform port in ports.Keys){
+				if (ports[port] == true){
+
+					//don't shoot if the enemy will hit a friendly
+					if (Physics.SphereCast(port.position, sphereRadius, -transform.right, out hitInfo, enemyLayerMask)){
+						if (hitInfo.transform.tag == ENEMY_TAG){
+							return;
+						}
+					}
+
+					Fire(PORT_ATTACK, port.position);
+
+				}
+			}
+		} else if (transform.InverseTransformPoint(player.position).x > 0.0f){
+			RaycastHit hitInfo;
+
+			foreach (Transform port in ports.Keys){
+				if (ports[port] == true){
+					//don't shoot if the enemy will hit a friendly
+					if (Physics.SphereCast(port.position, sphereRadius, transform.right, out hitInfo, enemyLayerMask)){
+						if (hitInfo.transform.tag == ENEMY_TAG){
+							return;
+						}
+					}
+
+					Fire(STARBOARD_ATTACK, port.position);
+				}
 			}
 		}
 	}
