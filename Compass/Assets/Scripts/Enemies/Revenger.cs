@@ -50,7 +50,8 @@ public class Revenger : EnemyAttack {
 	/// <param name="e">The event that was published.</param>
 	public void PowerUpFunc(Event e){
 		//first: if this ship is going to be destroyed, unregister to avoid errors
-		if (e.GetType().Name == SINK_EVENT_NAME){
+		if (e.GetType().Name == SINK_EVENT_NAME){ // better tha nthis: a debug.assert to confirm that the right type of event arrived
+			//also better: use the type-safe event manager, which will throw a compiler error if the wrong event arrives.
 			ShipSinkEvent sinkEvent = e as ShipSinkEvent;
 
 			if (sinkEvent.ship == gameObject.GetComponent<SailingShip>()){
