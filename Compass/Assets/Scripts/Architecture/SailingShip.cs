@@ -145,6 +145,7 @@ public abstract class SailingShip : MonoBehaviour {
 	/// </summary>
 	/// <returns>The ship's new position.</returns>
 	protected virtual Vector3 MoveForward(){
+		Debug.Log("MoveForward() called");
 		float weatherEffect = Vector3.Dot(transform.forward, windScript.GetWind()) + dotAdjustment;
 
 		if (inCurrent){

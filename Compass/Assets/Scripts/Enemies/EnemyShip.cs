@@ -23,7 +23,6 @@ public class EnemyShip : SailingShip {
 	//initial variables
 	protected override void Start (){
 		base.Start();
-
 		weatherOrganizer = GameObject.Find(WEATHER_OBJ).transform;
 	}
 
@@ -95,6 +94,19 @@ public class EnemyShip : SailingShip {
 
 
 	/// <summary>
+	/// Turns the ship toward a location.
+	/// </summary>
+	/// <returns>A heading toward the destination, as a Vector3.</returns>
+	/// <param name="destination">The location in world space where the ship is to go.</param>
+	protected Vector3 TurnToHeading(Vector3 destination){
+		return Vector3.RotateTowards(transform.forward,
+									 (destination - transform.position).normalized,
+									 rotationSpeed,
+									 0.0f);
+	}
+
+
+	/// <summary>
 	/// Detects when this ship is in a current. When it is, sets variables for other functions.
 	/// </summary>
 	/// <param name="other">Other.</param>
@@ -110,4 +122,28 @@ public class EnemyShip : SailingShip {
 	protected override void Turn(){
 		//intentionally left blank; each enemy ship turns differently
 	}
+
+
+	#region task-based movement
+
+
+	/// <summary>
+	/// Tasks can call this to get the effects of TurnToHeading.
+	/// </summary>
+	/// <param name="destination">The destination the enemy should turn toward.</param>
+	public void TurnToHeadingByTask(Vector3 destination){
+		Debug.Log("TurnToHeadingByTask() called");
+		transform.rotation = Quaternion.LookRotation(TurnToHeading(destination));
+	}
+
+
+	/// <summary>
+	/// A publicly-accessible version of MoveForward, again for tasks to call.
+	/// </summary>
+	public void MoveForwardByTask(){
+		Debug.Log("MoveForwardByTask() called");
+		rb.MovePosition(base.MoveForward());
+	}
+
+	#endregion
 }

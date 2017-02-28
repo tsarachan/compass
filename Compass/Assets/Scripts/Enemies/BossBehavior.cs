@@ -2,10 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossBehavior : MonoBehaviour {
+public class BossBehavior : EnemyShip {
 
-	void Start () {
-		WaitTask waitTask = new WaitTask(2.0f);
-		GameObject.Find("Game manager").GetComponent<TaskManager>().AddTask(waitTask);
+
+	public Vector3 destination = new Vector3(0.0f, 0.0f, 0.0f);
+
+
+	protected override void Start(){
+		base.Start();
+
+		TravelTask travelTask = new TravelTask(this, destination);
+		GameObject.Find("Game manager").GetComponent<TaskManager>().AddTask(travelTask);
 	}
+
+
+	//Update() and Turn() are intentionally blank; tasks will control the behavior of this enemy
+	protected override void Update(){ }
+
+	protected override void Turn(){ }
+
+
+
+
+
 }
