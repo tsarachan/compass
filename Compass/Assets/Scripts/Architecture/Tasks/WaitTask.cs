@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestTask : Task {
+public class WaitTask : Task {
 
 	private float timer = 0.0f;
-	private float timeOver = 1.0f;
+	private float duration = 1.0f;
 
-	public TestTask(float timeOver){
-		this.timeOver = timeOver;
+	public WaitTask(float duration){
+		this.duration = duration;
 	}
 
 	protected override void Init(){
@@ -20,7 +20,7 @@ public class TestTask : Task {
 
 		timer += Time.deltaTime;
 
-		if (timer >= timeOver){
+		if (timer >= duration){
 			SetStatus(TaskStatus.Succeeded);
 		}
 	}

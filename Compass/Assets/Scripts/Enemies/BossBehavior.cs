@@ -5,7 +5,7 @@ using UnityEngine;
 public class BossBehavior : MonoBehaviour {
 
 	void Start () {
-		TestTask testTask = new TestTask(2.0f);
-		GameObject.Find("Game manager").GetComponent<TaskManager>().AddTask(testTask);
+		WaitTask waitTask = new WaitTask(2.0f);
+		GameObject.Find("Game manager").GetComponent<TaskManager>().AddTask(waitTask);
 	}
 }
