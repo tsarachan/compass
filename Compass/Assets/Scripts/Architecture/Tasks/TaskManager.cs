@@ -2,19 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TaskManager {
-
-	//have a singleton task manager
-	static private TaskManager instance;
-	static public TaskManager Instance{
-		get {
-			if (instance == null){
-				instance = new TaskManager();
-			}
-
-			return instance;
-		}
-	}
+public class TaskManager : MonoBehaviour{
 
 	private readonly List<Task> tasks = new List<Task>();
 
@@ -29,7 +17,7 @@ public class TaskManager {
 	}
 
 
-	public void Update(){
+	private void Update(){
 		for (int i = tasks.Count - 1; i >= 0; --i){
 			Task task = tasks[i];
 
