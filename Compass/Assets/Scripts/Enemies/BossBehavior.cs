@@ -12,16 +12,15 @@ public class BossBehavior : EnemyShip {
 		base.Start();
 
 		TravelTask travelTask = new TravelTask(this, destination);
-		GameObject.Find("Game manager").GetComponent<TaskManager>().AddTask(travelTask);
+		//create and schedule all the tasks here
+		Services.TaskManager.AddTask(travelTask);
 	}
-
-
-	//Update() and Turn() are intentionally blank; tasks will control the behavior of this enemy
-	protected override void Update(){ }
 
 	protected override void Turn(){ }
 
 
+	//this Update() is intentionally limited, since this ship is run by tasks instead of by its own update loop
+	protected override void Update(){ }
 
 
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TaskManager : MonoBehaviour{
+public class TaskManager{
 
 	private readonly List<Task> tasks = new List<Task>();
 
@@ -17,7 +17,7 @@ public class TaskManager : MonoBehaviour{
 	}
 
 
-	private void Update(){
+	public void Update(){
 		for (int i = tasks.Count - 1; i >= 0; --i){
 			Task task = tasks[i];
 

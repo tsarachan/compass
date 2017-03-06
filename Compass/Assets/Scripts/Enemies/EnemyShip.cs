@@ -132,7 +132,6 @@ public class EnemyShip : SailingShip {
 	/// </summary>
 	/// <param name="destination">The destination the enemy should turn toward.</param>
 	public void TurnToHeadingByTask(Vector3 destination){
-		Debug.Log("TurnToHeadingByTask() called");
 		transform.rotation = Quaternion.LookRotation(TurnToHeading(destination));
 	}
 
@@ -141,7 +140,6 @@ public class EnemyShip : SailingShip {
 	/// A publicly-accessible version of MoveForward, again for tasks to call.
 	/// </summary>
 	public void MoveForwardByTask(){
-		Debug.Log("MoveForwardByTask() called");
 		rb.MovePosition(base.MoveForward());
 	}
 
