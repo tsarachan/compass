@@ -12,4 +12,14 @@ public abstract class Services {
 		}
 		set { taskManager = value; }
 	}
+
+
+	private static LevelManager levelManager;
+	public static LevelManager LevelManager{
+		get {
+			Debug.Assert(levelManager != null);
+			return levelManager;
+		}
+		set { levelManager = value; }
+	}
 }

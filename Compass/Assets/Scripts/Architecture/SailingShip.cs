@@ -45,8 +45,6 @@ public abstract class SailingShip : MonoBehaviour {
 
 	//used to track whether this ship is alive, and to handle its destruction
 	public bool Sinking { get; set; }
-	protected LevelManager levelManager;
-	protected const string GAME_MANAGER = "Game manager";
 
 	//variables for accessing the current state of the weather
 	protected Wind windScript;
@@ -109,7 +107,6 @@ public abstract class SailingShip : MonoBehaviour {
 		currentHealth = health;
 		fires = transform.Find(FIRES);
 		DestroyTime = destroyedClip.length;
-		levelManager = GameObject.Find(GAME_MANAGER).GetComponent<LevelManager>();
 		Sinking = false;
 		xBound = GameObject.Find(EAST_SPAWNER).transform.position.x + boundaryLeeway;
 		zBound = Mathf.Abs(GameObject.Find(SOUTH_SPAWNER).transform.position.z - boundaryLeeway);
@@ -135,7 +132,7 @@ public abstract class SailingShip : MonoBehaviour {
 			transform.position.x < -xBound ||
 			transform.position.z > zBound ||
 			transform.position.z < -zBound){
-			levelManager.DestroyShip(gameObject);
+			Services.LevelManager.DestroyShip(gameObject);
 		}
 	}
 
@@ -234,7 +231,7 @@ public abstract class SailingShip : MonoBehaviour {
 		}
 
 		Sinking = true;
-		levelManager.DestroyShip(gameObject);
+		Services.LevelManager.DestroyShip(gameObject);
 	}
 
 	#endregion

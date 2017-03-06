@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelManager : MonoBehaviour {
+public class LevelManager {
 
-	public float timeBetweenShips = 3.0f;
+	private float timeBetweenShips = 3.0f;
 
 
 	//a queue of all the waves that will be produced in the game
@@ -39,7 +39,7 @@ public class LevelManager : MonoBehaviour {
 	private float timer = 0.0f;
 
 
-	private void Start(){
+	public void Initialize(){
 		//get a reference to the parent object for enemies
 		enemyOrganizer = GameObject.Find(ENEMY_ORGANIZER).transform;
 
@@ -89,7 +89,7 @@ public class LevelManager : MonoBehaviour {
 	/// When there are no active enemies and the current wave doesn't have more of them to offer,
 	/// this function dequeues the current wave.
 	/// </summary>
-	private void Update(){
+	public void Update(){
 		GetEnemies();
 	}
 
@@ -99,7 +99,7 @@ public class LevelManager : MonoBehaviour {
 
 		if (timer >= waves.Peek().Rate){
 			if (waves.Peek().enemies.Count > 0){
-				GameObject newEnemy = Instantiate(waves.Peek().enemies[0],
+				GameObject newEnemy = UnityEngine.MonoBehaviour.Instantiate(waves.Peek().enemies[0],
 												  GameObject.Find(waves.Peek().spawners[0]).transform.position,
 												  Quaternion.identity,
 												  enemyOrganizer) as GameObject;

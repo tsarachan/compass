@@ -3982,7 +3982,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1358604501}
   - component: {fileID: 1358604502}
-  - component: {fileID: 1358604503}
   - component: {fileID: 1358604504}
   - component: {fileID: 1358604505}
   m_Layer: 0
@@ -4018,18 +4017,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numCannonballs: 10
---- !u!114 &1358604503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1358604500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c2a525441ec24a44ad33b149be1b20b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeBetweenShips: 5
 --- !u!114 &1358604504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4049,7 +4036,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1358604500}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 215b0071b99b44673bf83972be954a7a, type: 3}
+  m_Script: {fileID: 11500000, guid: 7b0d363a75ab34142b7927248b177f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1362101471

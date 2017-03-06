@@ -38,7 +38,6 @@ public class TravelTask : Task {
 		//this task successfully completes if the ship gets to within a reasonable distance of its destination.
 		if (Vector3.Distance(ship.transform.position, destination) <= distTolerance){
 			SetStatus(TaskStatus.Succeeded);
-			Debug.Log("Reached destination");
 		}
 	}
 }
