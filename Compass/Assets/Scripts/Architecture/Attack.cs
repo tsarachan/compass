@@ -44,7 +44,7 @@ public abstract class Attack : MonoBehaviour {
 	/// </summary>
 	/// <param name="dir">The direction of the attack, port or starboard.</param>
 	/// <param name="location">The location where the cannonball should be instantiated.</param>
-	protected void Fire(char dir, Vector3 location){
+	public virtual void Fire(char dir, Vector3 location){
 		GameObject myProjectile = ObjectPooling.ObjectPool.GetObj(CANNONBALL);
 		myProjectile.tag = gameObject.tag; //take the attacker's tag to avoid hitting the attacker
 

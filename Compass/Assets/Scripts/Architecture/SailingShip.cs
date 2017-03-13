@@ -190,6 +190,9 @@ public abstract class SailingShip : MonoBehaviour {
 	/// it will take no damage most of the time, but one random hit will be a critical hit that destroys it.
 	/// </summary>
 	public virtual void GetHit(){
+		EventManager.Instance.Fire(new TookDamageEvent(this)); //send out an event; used for, e.g., the boss to decrement its health bar
+
+
 		if (damageValues.Count > 0){
 			currentHealth -= damageValues[0];
 			damageValues.RemoveAt(0);
@@ -248,5 +251,16 @@ public abstract class SailingShip : MonoBehaviour {
 		}
 
 		return list;
+	}
+
+
+/// <summary>
+/// Provides a way to get the ship's current health as a percentage of the maximum. This is useful for,
+/// e.g., changing the boss' behavior as the boss takes damage.
+/// </summary>
+/// <returns>The ship's remaining health, as a percentage of its total health.</returns>
+/// <param name="e">An event, so that this can be used as an event handler.</param>
+	public float GetHealthPercentage(){
+		return currentHealth/health;
 	}
 }

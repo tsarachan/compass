@@ -13,12 +13,18 @@ public class TravelTask : Task {
 
 	/// <summary>
 	/// This is not great! This constructor gets the necessary state--but there's a risk of stale data.
+	/// 
+	/// Init() deals with this issue by checking to see if the data has gone stale.
 	/// </summary>
 	/// <param name="ship">The ship that will be moving.</param>
 	/// <param name="destination">The ship's destination point.</param>
 	public TravelTask(EnemyShip ship, Vector3 destination){
 		this.ship = ship;
 		this.destination = destination;
+	}
+
+	protected override void Init(){
+		if (ship == null) { SetStatus(TaskStatus.Aborted); }
 	}
 
 
