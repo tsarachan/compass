@@ -25,8 +25,12 @@ public class BossBehavior : EnemyShip {
 		EventManager.Instance.Register<TookDamageEvent>(damageFunc);
 
 		TravelTask travelTask = new TravelTask(this, destination);
+		SpawnTask spawnTask = new SpawnTask(transform,
+											Resources.Load("Wind follower") as GameObject);
+		travelTask.Then(spawnTask);
 		//create and schedule all the tasks here
 		RandomAttackTask randomAttackTask = new RandomAttackTask(this, GetComponent<RandomAttack>());
+		spawnTask.Then(randomAttackTask);
 		Services.TaskManager.AddTask(travelTask);
 	}
 
