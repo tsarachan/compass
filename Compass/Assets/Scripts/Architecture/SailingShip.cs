@@ -200,7 +200,8 @@ public abstract class SailingShip : MonoBehaviour {
 		//send out an event; used for, e.g., the boss to decrement its health bar
 		EventManager.Instance.Fire(new TookDamageEvent(this,
 													   GetHealthPercentage()));
-			
+
+		Debug.Log("Event fired");
 		SetFires();
 
 		if (currentHealth <= 0){

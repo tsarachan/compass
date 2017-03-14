@@ -27,6 +27,10 @@ public class BossBehavior : EnemyShip {
 	private TookDamageEvent.Handler damageFunc;
 
 
+	//the object the boss will chase in the final phase of the boss fight
+	private const string PLAYER_OBJ = "Player ship";
+
+
 	/// <summary>
 	/// Initialize variables and set up tasks.
 	/// </summary>
@@ -46,6 +50,9 @@ public class BossBehavior : EnemyShip {
 		//create and schedule all the tasks here
 		RandomAttackTask randomAttackTask = new RandomAttackTask(this, GetComponent<RandomAttack>());
 		spawnTask.Then(randomAttackTask);
+
+		ChaseTask chaseTask = new ChaseTask(this, GameObject.Find(PLAYER_OBJ).transform);
+		randomAttackTask.Then(chaseTask);
 		Services.TaskManager.AddTask(travelTask);
 	}
 
@@ -112,12 +119,15 @@ public class BossBehavior : EnemyShip {
 	/// </summary>
 	/// <param name="e">This should only ever receive TookDamageEvents.</param>
 	private void HandleDamage(Event e){
+		Debug.Log("Event received");
 		TookDamageEvent damageEvent = e as TookDamageEvent;
 
 		if (damageEvent.ship == this){
+			Debug.Log("damage percent: " + damageEvent.damagePercent);
 			healthBar.fillAmount = damageEvent.damagePercent;
 
 			if (damageEvent.damagePercent <= 0.0f){
+				Debug.Log("Boss is unregistering for damage events");
 				EventManager.Instance.Unregister<TookDamageEvent>(damageFunc);
 			}
 		}

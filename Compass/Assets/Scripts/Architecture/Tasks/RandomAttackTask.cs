@@ -41,8 +41,6 @@ public class RandomAttackTask : Task {
 		damageFunc = HandleDamage;
 		EventManager.Instance.Register<TookDamageEvent>(damageFunc);
 
-		Debug.Log("RandomAttackTask started");
-
 		attackScript.Firing = true;
 	}
 

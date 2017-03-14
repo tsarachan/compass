@@ -29,7 +29,10 @@ public class ChaseTask : Task {
 
 
 	internal override void Update(){
-
+		if (target == null){
+			SetStatus(TaskStatus.Aborted);
+			return;
+		}
 	}
 
 

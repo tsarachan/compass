@@ -40,8 +40,6 @@ public class SpawnTask : Task {
 
 		damageFunc = HandleDamage;
 		EventManager.Instance.Register<TookDamageEvent>(damageFunc);
-
-		Debug.Log("SpawnTask() begun");
 		Services.LevelManager.AddWave(enemyWave);
 	}
 

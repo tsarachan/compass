@@ -100,8 +100,6 @@ public class LevelManager {
 
 			if (timer >= waves.Peek().Rate){
 				if (waves.Peek().enemies.Count > 0){
-					Debug.Log(GameObject.Find(waves.Peek().spawners[0]).transform.position);
-
 					GameObject newEnemy = UnityEngine.MonoBehaviour.Instantiate(waves.Peek().enemies[0],
 													  GameObject.Find(waves.Peek().spawners[0]).transform.position,
 													  Quaternion.identity,
