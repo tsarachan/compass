@@ -9,7 +9,8 @@ public class RandomAttack : Attack {
 
 
 	//----------Internal variables----------
-	public bool Firing { get; set; }
+
+	public bool Firing { get; set; } //is this ship randomly attacking right now?
 
 	//variables for reloading
 	protected float reloadTimer = 0.0f;
@@ -23,6 +24,8 @@ public class RandomAttack : Attack {
 	//useless char for the Fire() function, which calls for a char whose functionality this class doesn't need
 	protected const char DUMMY_CHAR = 'z';
 
+
+	//initialize variables
 	protected override void Start(){
 		Firing = false;
 		cannonPort = transform.Find(CANNON_PORT);
@@ -30,7 +33,9 @@ public class RandomAttack : Attack {
 	}
 
 
-
+	/// <summary>
+	/// If this ship is randomly attacking, keep reloading and firing.
+	/// </summary>
 	protected override void Update(){
 		if (Firing){
 			reloadTimer += Time.deltaTime;

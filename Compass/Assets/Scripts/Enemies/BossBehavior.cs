@@ -16,12 +16,20 @@ public class BossBehavior : EnemyShip {
 
 
 	//----------Internal variables----------
+
+	//variables relating to the life meter
 	private Image healthBar;
 	private const string HEALTH_BAR_CANVAS = "Life meter canvas";
 	private const string HEALTH_BAR = "Life meter";
 
+
+	//this is used as part of event handling
 	private TookDamageEvent.Handler damageFunc;
 
+
+	/// <summary>
+	/// Initialize variables and set up tasks.
+	/// </summary>
 	protected override void Start(){
 		base.Start();
 
@@ -42,6 +50,10 @@ public class BossBehavior : EnemyShip {
 	}
 
 
+	/// <summary>
+	/// Put together a task that spawns waves of enemies.
+	/// </summary>
+	/// <returns>The task.</returns>
 	private SpawnTask BuildSpawnTask(){
 		List<GameObject> enemiesToSpawn = BuildEnemyList();
 		List<string> spawners = BuildSpawnerList();
@@ -54,6 +66,10 @@ public class BossBehavior : EnemyShip {
 	}
 
 
+	/// <summary>
+	/// Use publicly-set variables to create a list of enemies to spawn as part of the spawn task.
+	/// </summary>
+	/// <returns>The list.</returns>
 	private List<GameObject> BuildEnemyList(){
 		List<GameObject> temp = new List<GameObject>();
 
@@ -67,6 +83,10 @@ public class BossBehavior : EnemyShip {
 	}
 
 
+	/// <summary>
+	/// Create a list of "spawners" for the spawn task. In this case, the spawner is always the boss itself.
+	/// </summary>
+	/// <returns>The list, which is this gameobject's name repeated.</returns>
 	private List<string> BuildSpawnerList(){
 		List<string> temp = new List<string>();
 
@@ -86,6 +106,11 @@ public class BossBehavior : EnemyShip {
 	protected override void Update(){ }
 
 
+	/// <summary>
+	/// Handle damage events. When an event indicates that this ship is damaged, reduce the life bar. If the boss
+	/// has been destroyed, unregister for the damage events.
+	/// </summary>
+	/// <param name="e">This should only ever receive TookDamageEvents.</param>
 	private void HandleDamage(Event e){
 		TookDamageEvent damageEvent = e as TookDamageEvent;
 

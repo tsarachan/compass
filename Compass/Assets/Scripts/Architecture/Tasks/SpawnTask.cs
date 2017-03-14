@@ -23,12 +23,18 @@ public class SpawnTask : Task {
 	private const string BOSS_OBJ = "Boss";
 
 
+	//constructor
 	public SpawnTask(Transform start, Wave enemyWave){
 		this.start = start;
 		this.enemyWave = enemyWave;
 	}
 
 
+	/// <summary>
+	/// Check to make sure the state isn't stale, then register for the events that will tell this task when to end.
+	/// 
+	/// Add the first wave of enemies to the level manager, so that the task's action is immediately obvious.
+	/// </summary>
 	protected override void Init(){
 		if (start == null) { SetStatus(TaskStatus.Aborted); }
 
@@ -50,15 +56,23 @@ public class SpawnTask : Task {
 	}
 
 
+	/// <summary>
+	/// Unregister for events.
+	/// </summary>
 	protected override void Cleanup(){
 		EventManager.Instance.Unregister<TookDamageEvent>(damageFunc);
 	}
 
 
+	/// <summary>
+	/// When a damage event is sent, see if it's the boss that was damaged. If so, determine whether it's time
+	/// for this task to stop.
+	/// </summary>
+	/// <param name="e">E.</param>
 	private void HandleDamage(Event e){
 		TookDamageEvent damageEvent = e as TookDamageEvent;
 
-		if (damageEvent.ship.gameObject.name.Contains(BOSS_OBJ)){
+		if (damageEvent.ship.gameObject.name == start.gameObject.name){
 			if (damageEvent.damagePercent <= nextTaskPercent){
 				SetStatus(TaskStatus.Succeeded);
 			}
