@@ -37,6 +37,7 @@ public class RandomAttack : Attack {
 
 			if (reloadTimer >= reloadDuration){
 				Fire(DUMMY_CHAR, cannonPort.position);
+				reloadTimer = 0.0f;
 			}
 		}
 	}
@@ -52,8 +53,8 @@ public class RandomAttack : Attack {
 		myProjectile.tag = gameObject.tag;
 
 		myProjectile.GetComponent<Projectile>().Launch(new Vector3(0.0f,
-																   Random.Range(0, 360.0f),
-																   0.0f),
+																   45.0f,
+			0.0f),
 													   cannonPort.position);
 	}
 }

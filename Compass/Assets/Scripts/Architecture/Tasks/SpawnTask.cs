@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class SpawnTask : Task {
 
+
 	//the percentage of the boss' damage where this task will stop and the next will begin
-	public float nextTaskPercent = 0.5f;
+	private float nextTaskPercent = 0.5f;
+
+	//the waves this enemy will spawn
+	private Wave enemyWave;
+
+	private float spawnTimer = 0.0f;
 
 
 	private Transform start; //the transform of the enemy that will spawn more enemies
@@ -17,9 +23,9 @@ public class SpawnTask : Task {
 	private const string BOSS_OBJ = "Boss";
 
 
-	public SpawnTask(Transform start, GameObject spawnEnemy){
+	public SpawnTask(Transform start, Wave enemyWave){
 		this.start = start;
-		this.spawnEnemy = spawnEnemy;
+		this.enemyWave = enemyWave;
 	}
 
 
@@ -28,6 +34,19 @@ public class SpawnTask : Task {
 
 		damageFunc = HandleDamage;
 		EventManager.Instance.Register<TookDamageEvent>(damageFunc);
+
+		Debug.Log("SpawnTask() begun");
+		Services.LevelManager.AddWave(enemyWave);
+	}
+
+
+	//add a new wave of enemies to the level manager when the previous wave is exhausted
+	internal override void Update(){
+		spawnTimer += Time.deltaTime;
+
+		if (spawnTimer >= enemyWave.Rate * enemyWave.enemies.Count){
+			Services.LevelManager.AddWave(enemyWave);
+		}
 	}
 
 
