@@ -11,11 +11,15 @@ public class BossBehavior : EnemyShip {
 
 	//----------Internal variables----------
 	private Image healthBar;
+	private const string HEALTH_BAR_CANVAS = "Life meter canvas";
+	private const string HEALTH_BAR = "Life meter";
 
 	private TookDamageEvent.Handler damageFunc;
 
 	protected override void Start(){
 		base.Start();
+
+		healthBar = transform.Find(HEALTH_BAR_CANVAS).Find(HEALTH_BAR).GetComponent<Image>();
 
 		damageFunc = new TookDamageEvent.Handler(HandleDamage);
 		EventManager.Instance.Register<TookDamageEvent>(damageFunc);
@@ -37,9 +41,9 @@ public class BossBehavior : EnemyShip {
 		TookDamageEvent damageEvent = e as TookDamageEvent;
 
 		if (damageEvent.ship == this){
-			healthBar.fillAmount = GetHealthPercentage();
+			healthBar.fillAmount = damageEvent.damagePercent;
 
-			if (healthBar.fillAmount <= 0.0f){
+			if (damageEvent.damagePercent <= 0.0f){
 				EventManager.Instance.Unregister<TookDamageEvent>(damageFunc);
 			}
 		}
