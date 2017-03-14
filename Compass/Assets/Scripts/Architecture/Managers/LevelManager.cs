@@ -72,9 +72,9 @@ public class LevelManager {
 
 
 
-		waves.Enqueue(new Wave(wave1List, timeBetweenShips, wave1Spawners));
-		waves.Enqueue(new Wave(wave2List, timeBetweenShips, wave2Spawners));
-		waves.Enqueue(new Wave(wave3List, timeBetweenShips, wave3Spawners));
+//		waves.Enqueue(new Wave(wave1List, timeBetweenShips, wave1Spawners));
+//		waves.Enqueue(new Wave(wave2List, timeBetweenShips, wave2Spawners));
+//		waves.Enqueue(new Wave(wave3List, timeBetweenShips, wave3Spawners));
 	}
 
 
@@ -95,27 +95,31 @@ public class LevelManager {
 
 
 	private void GetEnemies(){
-		timer += Time.deltaTime;
+		if (waves.Count > 0){
+			timer += Time.deltaTime;
 
-		if (timer >= waves.Peek().Rate){
-			if (waves.Peek().enemies.Count > 0){
-				GameObject newEnemy = UnityEngine.MonoBehaviour.Instantiate(waves.Peek().enemies[0],
-												  GameObject.Find(waves.Peek().spawners[0]).transform.position,
-												  Quaternion.identity,
-												  enemyOrganizer) as GameObject;
+			if (timer >= waves.Peek().Rate){
+				if (waves.Peek().enemies.Count > 0){
+					Debug.Log(GameObject.Find(waves.Peek().spawners[0]).transform.position);
 
-				activeEnemies.Add(newEnemy);
+					GameObject newEnemy = UnityEngine.MonoBehaviour.Instantiate(waves.Peek().enemies[0],
+													  GameObject.Find(waves.Peek().spawners[0]).transform.position,
+													  Quaternion.identity,
+													  enemyOrganizer) as GameObject;
 
-				waves.Peek().enemies.RemoveAt(0);
-				waves.Peek().spawners.RemoveAt(0);
+					activeEnemies.Add(newEnemy);
+
+					waves.Peek().enemies.RemoveAt(0);
+					waves.Peek().spawners.RemoveAt(0);
+				}
+
+				timer = 0.0f;
 			}
 
-			timer = 0.0f;
-		}
-
-		if (activeEnemies.Count == 0){
-			if (waves.Peek().enemies.Count <= 0){
-				waves.Dequeue();
+			if (activeEnemies.Count == 0){
+				if (waves.Peek().enemies.Count <= 0){
+					waves.Dequeue();
+				}
 			}
 		}
 	}
@@ -133,19 +137,26 @@ public class LevelManager {
 
 
 	/// <summary>
-	/// Use this class to crate waves.
+	/// Other objects can use this to queue up waves of enemies
 	/// </summary>
-	private class Wave {
+	public void AddWave(Wave wave){
+		waves.Enqueue(wave);
+	}
+}
 
-		public List<GameObject> enemies = new List<GameObject>(); //the enemies that will be created
-		public float Rate { get; set; } //how many seconds will pass between each enemy
-		public List<string> spawners = new List<string>(); //the spawners where enemies will be created
+/// <summary>
+/// Use this class to crate waves.
+/// </summary>
+public class Wave {
+
+	public List<GameObject> enemies = new List<GameObject>(); //the enemies that will be created
+	public float Rate { get; set; } //how many seconds will pass between each enemy
+	public List<string> spawners = new List<string>(); //the spawners where enemies will be created
 
 
-		public Wave(List<GameObject> enemies, float rate, List<string> spawners){
-			this.enemies = enemies;
-			this.Rate = rate;
-			this.spawners = spawners;
-		}
+	public Wave(List<GameObject> enemies, float rate, List<string> spawners){
+		this.enemies = enemies;
+		this.Rate = rate;
+		this.spawners = spawners;
 	}
 }

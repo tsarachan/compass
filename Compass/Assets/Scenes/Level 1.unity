@@ -2510,6 +2510,9 @@ MonoBehaviour:
   dotAdjustment: 1
   boundaryLeeway: 2
   destination: {x: 0, y: 0, z: 0}
+  spawnedEnemy: Wind-following enemy
+  rate: 3
+  spawnsPerWave: 3
 --- !u!54 &774326366
 Rigidbody:
   m_ObjectHideFlags: 0
