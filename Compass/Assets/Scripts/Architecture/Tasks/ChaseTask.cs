@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ChaseTask : Task {
 
-	private SailingShip ship;
+	private EnemyShip ship;
 	private Transform target;
 
 
@@ -12,7 +12,7 @@ public class ChaseTask : Task {
 	private TookDamageEvent.Handler damageFunc;
 
 
-	public ChaseTask(SailingShip ship, Transform target){
+	public ChaseTask(EnemyShip ship, Transform target){
 		this.ship = ship;
 		this.target = target;
 	}
@@ -33,6 +33,9 @@ public class ChaseTask : Task {
 			SetStatus(TaskStatus.Aborted);
 			return;
 		}
+
+		ship.TurnToHeadingByTask(target.position);
+		ship.MoveForwardByTask();
 	}
 
 

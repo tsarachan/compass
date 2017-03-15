@@ -36,6 +36,7 @@ public class SpawnTask : Task {
 	/// Add the first wave of enemies to the level manager, so that the task's action is immediately obvious.
 	/// </summary>
 	protected override void Init(){
+		Debug.Log("Initializing a SpawnTask");
 		if (start == null) { SetStatus(TaskStatus.Aborted); }
 
 		damageFunc = HandleDamage;
@@ -58,6 +59,7 @@ public class SpawnTask : Task {
 	/// Unregister for events.
 	/// </summary>
 	protected override void Cleanup(){
+		Debug.Log("SpawnTask is cleaning up; status == " + Status);
 		EventManager.Instance.Unregister<TookDamageEvent>(damageFunc);
 	}
 
@@ -68,11 +70,13 @@ public class SpawnTask : Task {
 	/// </summary>
 	/// <param name="e">E.</param>
 	private void HandleDamage(Event e){
+		Debug.Log("SpawnTask received an event");
 		TookDamageEvent damageEvent = e as TookDamageEvent;
 
 		if (damageEvent.ship.gameObject.name == start.gameObject.name){
 			if (damageEvent.damagePercent <= nextTaskPercent){
 				SetStatus(TaskStatus.Succeeded);
+				Debug.Log("SpawnTask status is now " + Status);
 			}
 		}
 	}

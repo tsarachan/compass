@@ -2503,8 +2503,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forwardSpeed: 1
   rotationSpeed: 0.01
-  health: 10
-  damageValues: 
+  health: 20
+  damageValues: 02000000020000000200000002000000020000000200000002000000020000000200000002000000
   destroyedClip: {fileID: 8300000, guid: 285c8924f86fd4e50b20912683d960e7, type: 3}
   sinkSpeed: 0.01
   dotAdjustment: 1
@@ -2815,7 +2815,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 833707915}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -8.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 844747923}

@@ -33,12 +33,13 @@ public class RandomAttackTask : Task {
 	/// can tell when it should stop, and then start the ship this task is associated with firing randomly.
 	/// </summary>
 	protected override void Init(){
+		Debug.Log("Initializing a RandomAttackTask");
 		if (ship == null || attackScript == null) {
 			SetStatus(TaskStatus.Aborted);
 			return;
 		}
 
-		damageFunc = HandleDamage;
+		damageFunc = HandleDamageRandom;
 		EventManager.Instance.Register<TookDamageEvent>(damageFunc);
 
 		attackScript.Firing = true;
@@ -63,7 +64,8 @@ public class RandomAttackTask : Task {
 	/// task.
 	/// </summary>
 	/// <param name="e">The TookDamageEvent.</param>
-	private void HandleDamage(Event e){
+	private void HandleDamageRandom(Event e){
+		Debug.Log("RandomAttackTask got an event");
 		TookDamageEvent damageEvent = e as TookDamageEvent;
 
 		if (damageEvent.ship.gameObject.name == ship.gameObject.name){
