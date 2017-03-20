@@ -12,6 +12,10 @@ public class ChaseTask : Task {
 	private TookDamageEvent.Handler damageFunc;
 
 
+	//used to determine whether it's the boss doing the chasing, so that the boss can have additional effects
+	private const string BOSS_OBJ = "Boss";
+
+
 	public ChaseTask(EnemyShip ship, Transform target){
 		this.ship = ship;
 		this.target = target;
@@ -19,12 +23,21 @@ public class ChaseTask : Task {
 
 
 	protected override void Init(){
+		Debug.Log("Initializing a ChaseTask");
 		if (ship == null || target == null){
 			SetStatus(TaskStatus.Aborted);
 		}
 
 		damageFunc = HandleDamage;
 		EventManager.Instance.Register<TookDamageEvent>(damageFunc);
+
+
+		//have the boss spawn more enemies in addition to chasing the player
+		if (ship.gameObject.name.Contains(BOSS_OBJ)){
+			SpawnTask spawnTask = ship.gameObject.GetComponent<BossBehavior>().BuildSpawnTask();
+			Debug.Log(spawnTask);
+			Services.TaskManager.AddTask(spawnTask);
+		}
 	}
 
 

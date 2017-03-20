@@ -34,7 +34,6 @@ public class TaskManager{
 			//the task isn't done yet, so it should do at least one update loop
 			else{
 				task.Update();
-
 				if (task.IsFinished){
 					HandleCompletion(task, i);
 				}
@@ -51,7 +50,6 @@ public class TaskManager{
 	/// <param name="task">The task that is completed.</param>
 	/// <param name="taskIndex">The index of the completed task in the manager's list of tasks.</param>
 	private void HandleCompletion(Task task, int taskIndex){
-		UnityEngine.Debug.Log("Handling completion for " + task.ToString());
 		if (task.NextTask != null && task.IsSucceeded){
 			Debug.Log("Adding " + task.NextTask);
 			AddTask(task.NextTask);

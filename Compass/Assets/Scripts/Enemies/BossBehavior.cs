@@ -61,7 +61,7 @@ public class BossBehavior : EnemyShip {
 	/// Put together a task that spawns waves of enemies.
 	/// </summary>
 	/// <returns>The task.</returns>
-	private SpawnTask BuildSpawnTask(){
+	public SpawnTask BuildSpawnTask(){
 		List<GameObject> enemiesToSpawn = BuildEnemyList();
 		List<string> spawners = BuildSpawnerList();
 
@@ -119,15 +119,12 @@ public class BossBehavior : EnemyShip {
 	/// </summary>
 	/// <param name="e">This should only ever receive TookDamageEvents.</param>
 	private void HandleDamage(Event e){
-		Debug.Log("Event received");
 		TookDamageEvent damageEvent = e as TookDamageEvent;
 
 		if (damageEvent.ship == this){
-			Debug.Log("damage percent: " + damageEvent.damagePercent);
 			healthBar.fillAmount = damageEvent.damagePercent;
 
 			if (damageEvent.damagePercent <= 0.0f){
-				Debug.Log("Boss is unregistering for damage events");
 				EventManager.Instance.Unregister<TookDamageEvent>(damageFunc);
 			}
 		}

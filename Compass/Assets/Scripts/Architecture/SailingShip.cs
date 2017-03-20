@@ -201,7 +201,7 @@ public abstract class SailingShip : MonoBehaviour {
 		EventManager.Instance.Fire(new TookDamageEvent(this,
 													   GetHealthPercentage()));
 
-		Debug.Log("Event fired");
+		//Debug.Log("Event fired");
 		SetFires();
 
 		if (currentHealth <= 0){

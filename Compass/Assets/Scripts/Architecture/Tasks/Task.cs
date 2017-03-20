@@ -33,10 +33,10 @@ public class Task {
 	/// Used the change the task's status.
 	/// </summary>
 	internal void SetStatus(TaskStatus status){
-		Debug.Log("SetStatus called; status == " + status);
+		//Debug.Log("SetStatus called; status == " + status);
 		//if it's not actually a change, stop here
 		if (Status == status){
-			Debug.Log("No change in status; returning");
+			//Debug.Log("No change in status; returning");
 			return;
 		}
 
@@ -53,7 +53,7 @@ public class Task {
 
 			//however the task ends, it should act appropriately and then clean up
 			case TaskStatus.Succeeded:
-				Debug.Log("Handling the success process");
+				//Debug.Log("Handling the success process");
 				OnSuccess();
 				Cleanup();
 				break;
