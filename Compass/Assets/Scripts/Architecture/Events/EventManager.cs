@@ -27,7 +27,6 @@ public class EventManager {
 	/// <param name="handler">The function to be called when the event occurs.</param>
 	/// <typeparam name="T">The type of the event.</typeparam>
 	public void Register<T>(Event.Handler handler) where T : Event{
-		UnityEngine.Debug.Log("Registering " + handler.ToString());
 		Type type = typeof(T);
 
 		/*
@@ -54,7 +53,6 @@ public class EventManager {
 	/// <param name="handler">The function that was called when the event occurred.</param>
 	/// <typeparam name="T">The type of the event.</typeparam>
 	public void Unregister<T>(Event.Handler handler) where T : Event{
-		UnityEngine.Debug.Log("Unregistering " + handler.ToString());
 		Type type = typeof(T);
 
 		Event.Handler handlers;

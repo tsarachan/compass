@@ -126,6 +126,10 @@ public class BossBehavior : EnemyShip {
 			gameManager.GameHasStarted = false;
 			Destroy(gameObject);
 		}
+
+		if (Input.GetKeyDown(KeyCode.Space)){
+			GetHit();
+		}
 	}
 
 

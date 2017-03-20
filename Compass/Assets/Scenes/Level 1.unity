@@ -2506,7 +2506,7 @@ MonoBehaviour:
   health: 20
   damageValues: 02000000020000000200000002000000020000000200000002000000020000000200000002000000
   destroyedClip: {fileID: 8300000, guid: 285c8924f86fd4e50b20912683d960e7, type: 3}
-  sinkSpeed: 0.01
+  sinkSpeed: 0.02
   dotAdjustment: 1
   boundaryLeeway: 2
   destination: {x: 0, y: 0, z: 0}

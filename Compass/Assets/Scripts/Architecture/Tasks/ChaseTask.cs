@@ -27,7 +27,6 @@ public class ChaseTask : Task {
 
 
 	protected override void Init(){
-		Debug.Log("Initializing a ChaseTask");
 		if (ship == null || target == null){
 			SetStatus(TaskStatus.Aborted);
 		}
@@ -41,7 +40,6 @@ public class ChaseTask : Task {
 		//have the boss spawn more enemies in addition to chasing the player
 		if (ship.gameObject.name.Contains(BOSS_OBJ)){
 			SpawnTask spawnTask = ship.gameObject.GetComponent<BossBehavior>().BuildSpawnTask();
-			Debug.Log(spawnTask);
 			Services.TaskManager.AddTask(spawnTask);
 		}
 	}
