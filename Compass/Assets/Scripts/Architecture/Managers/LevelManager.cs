@@ -111,9 +111,15 @@ public class LevelManager {
 					waves.Peek().spawners.RemoveAt(0);
 				}
 
+				//move on to the next wave if the current one is out of enemies to spawn
+				if (waves.Peek().enemies.Count <= 0){
+					waves.Dequeue();
+				}
+
 				timer = 0.0f;
 			}
 
+			//move on to the next wave if no enemies are on the screen
 			if (activeEnemies.Count == 0){
 				if (waves.Peek().enemies.Count <= 0){
 					waves.Dequeue();

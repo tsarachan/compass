@@ -11,7 +11,10 @@ public class SpawnTask : Task {
 	//the waves this enemy will spawn
 	private Wave enemyWave;
 
+
+	//variables used to handle spawning
 	private float spawnTimer = 0.0f;
+	private int numPerWave;
 
 
 	private Transform start; //the transform of the enemy that will spawn more enemies
@@ -27,6 +30,7 @@ public class SpawnTask : Task {
 	public SpawnTask(Transform start, Wave enemyWave){
 		this.start = start;
 		this.enemyWave = enemyWave;
+		numPerWave = this.enemyWave.enemies.Count;
 	}
 
 
@@ -40,7 +44,7 @@ public class SpawnTask : Task {
 
 		damageFunc = HandleDamage;
 		EventManager.Instance.Register<TookDamageEvent>(damageFunc);
-		Services.LevelManager.AddWave(enemyWave);
+		Services.LevelManager.AddWave(MakeTempWave(enemyWave));
 	}
 
 
@@ -48,9 +52,26 @@ public class SpawnTask : Task {
 	internal override void Update(){
 		spawnTimer += Time.deltaTime;
 
-		if (spawnTimer >= enemyWave.Rate * enemyWave.enemies.Count){
-			Services.LevelManager.AddWave(enemyWave);
+		if (spawnTimer >= enemyWave.Rate * numPerWave){
+			Services.LevelManager.AddWave(MakeTempWave(enemyWave));
+			spawnTimer = 0.0f;
 		}
+	}
+
+
+	/// <summary>
+	/// Create a new wave to send to LevelManager.
+	/// 
+	/// Without this, the LevelManager will receive enemyWave by reference, and will spawn enemies out of this Task's lists, leaving them empty.
+	/// </summary>
+	/// <returns>A copy of the wave provided as a reference.</returns>
+	/// <param name="wave">The wave to copy.</param>
+	private Wave MakeTempWave(Wave wave){
+		List<GameObject> tempEnemies = new List<GameObject>(wave.enemies);
+		float tempRate = wave.Rate;
+		List<string> tempSpawners = new List<string>(wave.spawners);
+
+		return new Wave(tempEnemies, tempRate, tempSpawners);
 	}
 
 
