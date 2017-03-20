@@ -51,7 +51,6 @@ public class TaskManager{
 	/// <param name="taskIndex">The index of the completed task in the manager's list of tasks.</param>
 	private void HandleCompletion(Task task, int taskIndex){
 		if (task.NextTask != null && task.IsSucceeded){
-			Debug.Log("Adding " + task.NextTask);
 			AddTask(task.NextTask);
 		}
 

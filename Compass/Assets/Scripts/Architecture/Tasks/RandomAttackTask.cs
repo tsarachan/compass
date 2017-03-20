@@ -16,6 +16,10 @@ public class RandomAttackTask : Task {
 	private const string BOSS_OBJ = "Boss";
 
 
+	//delegate that responds to ShipSinkEvents; used to handle the boss sinking during battle
+	private ShipSinkEvent.Handler sinkFunc;
+
+
 	/// <summary>
 	/// Constructor for random attack tasks. This is at risk of stale data; Init(), below, checks for that
 	/// possibility.
@@ -39,7 +43,9 @@ public class RandomAttackTask : Task {
 		}
 
 		damageFunc = HandleDamageRandom;
+		sinkFunc = HandleDestruction;
 		EventManager.Instance.Register<TookDamageEvent>(damageFunc);
+		EventManager.Instance.Register<ShipSinkEvent>(sinkFunc);
 
 		attackScript.Firing = true;
 	}
@@ -48,6 +54,7 @@ public class RandomAttackTask : Task {
 	//unregister for events
 	protected override void Cleanup(){
 		EventManager.Instance.Unregister<TookDamageEvent>(damageFunc);
+		EventManager.Instance.Unregister<ShipSinkEvent>(sinkFunc);
 	}
 
 
@@ -74,6 +81,15 @@ public class RandomAttackTask : Task {
 			if (damageEvent.damagePercent <= 0.0f){
 				SetStatus(TaskStatus.Aborted);
 			}
+		}
+	}
+
+
+	private void HandleDestruction(Event e){
+		ShipSinkEvent sinkEvent = e as ShipSinkEvent;
+
+		if (sinkEvent.ship.gameObject == ship.gameObject){
+			Abort();
 		}
 	}
 }

@@ -26,6 +26,10 @@ public class SpawnTask : Task {
 	private const string BOSS_OBJ = "Boss";
 
 
+	//delegate that responds to ShipSinkEvents; this deals with the boss' destruction
+	private ShipSinkEvent.Handler sinkFunc;
+
+
 	//constructor
 	public SpawnTask(Transform start, Wave enemyWave){
 		this.start = start;
@@ -43,7 +47,9 @@ public class SpawnTask : Task {
 		if (start == null) { SetStatus(TaskStatus.Aborted); }
 
 		damageFunc = HandleDamage;
+		sinkFunc = HandleDestruction;
 		EventManager.Instance.Register<TookDamageEvent>(damageFunc);
+		EventManager.Instance.Register<ShipSinkEvent>(sinkFunc);
 		Services.LevelManager.AddWave(MakeTempWave(enemyWave));
 	}
 
@@ -80,6 +86,7 @@ public class SpawnTask : Task {
 	/// </summary>
 	protected override void Cleanup(){
 		EventManager.Instance.Unregister<TookDamageEvent>(damageFunc);
+		EventManager.Instance.Unregister<ShipSinkEvent>(sinkFunc);
 	}
 
 
@@ -95,6 +102,16 @@ public class SpawnTask : Task {
 			if (damageEvent.damagePercent <= nextTaskPercent){
 				SetStatus(TaskStatus.Succeeded);
 			}
+		}
+	}
+
+
+
+	private void HandleDestruction(Event e){
+		ShipSinkEvent sinkEvent = e as ShipSinkEvent;
+
+		if (sinkEvent.ship.gameObject.name == start.gameObject.name){
+			Abort();
 		}
 	}
 }

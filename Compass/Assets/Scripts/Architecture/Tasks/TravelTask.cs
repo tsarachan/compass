@@ -11,6 +11,10 @@ public class TravelTask : Task {
 	private float distTolerance = 1.0f;
 
 
+	//delegate that handles ShipSinkEvents; used to deal with the traveling ship being sunk
+	private ShipSinkEvent.Handler sinkFunc;
+
+
 	/// <summary>
 	/// This is not great! This constructor gets the necessary state--but there's a risk of stale data.
 	/// 
@@ -25,6 +29,9 @@ public class TravelTask : Task {
 
 	protected override void Init(){
 		if (ship == null) { SetStatus(TaskStatus.Aborted); }
+
+		sinkFunc = HandleDestruction;
+		EventManager.Instance.Register<ShipSinkEvent>(sinkFunc);
 	}
 
 
@@ -44,6 +51,21 @@ public class TravelTask : Task {
 		//this task successfully completes if the ship gets to within a reasonable distance of its destination.
 		if (Vector3.Distance(ship.transform.position, destination) <= distTolerance){
 			SetStatus(TaskStatus.Succeeded);
+		}
+	}
+
+
+	protected override void Cleanup(){
+		EventManager.Instance.Unregister<ShipSinkEvent>(sinkFunc);
+	}
+
+
+	private void HandleDestruction(Event e){
+		ShipSinkEvent sinkEvent = e as ShipSinkEvent;
+		Debug.Log("TravelTask is handling destruction");
+		if (sinkEvent.ship == ship){
+			Debug.Log("TravelTask is aborting");
+			Abort();
 		}
 	}
 }

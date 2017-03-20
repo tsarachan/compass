@@ -4,6 +4,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 
 
+	public bool GameHasStarted { get; set; }
+
 	/// <summary>
 	/// Create and/or initialize services, as appropriate.
 	/// 
@@ -13,6 +15,8 @@ public class GameManager : MonoBehaviour {
 		Services.TaskManager = new TaskManager();
 		Services.LevelManager = new LevelManager();
 		Services.LevelManager.Initialize();
+
+		GameHasStarted = true;
 	}
 
 
@@ -20,7 +24,9 @@ public class GameManager : MonoBehaviour {
 	/// Direct services to update.
 	/// </summary>
 	public void Update(){
-		Services.TaskManager.Update();
-		Services.LevelManager.Update();
+		if (GameHasStarted){
+			Services.TaskManager.Update();
+			Services.LevelManager.Update();
+		}
 	}
 }

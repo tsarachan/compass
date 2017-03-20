@@ -229,10 +229,11 @@ public abstract class SailingShip : MonoBehaviour {
 
 
 	protected void GetDestroyed(){
-
+		Debug.Log("GetDestroyed() called for " + gameObject);
 		if (!audioSource.isPlaying){
 			audioSource.clip = destroyedClip;
 			audioSource.Play();
+			Debug.Log("playing audio: " + audioSource.isPlaying);
 		}
 
 		Sinking = true;

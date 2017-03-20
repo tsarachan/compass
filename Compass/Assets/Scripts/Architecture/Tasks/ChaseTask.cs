@@ -16,6 +16,10 @@ public class ChaseTask : Task {
 	private const string BOSS_OBJ = "Boss";
 
 
+	//delegate that responds to ShipSinkEvents; used to determine when this task should end
+	private ShipSinkEvent.Handler sinkFunc;
+
+
 	public ChaseTask(EnemyShip ship, Transform target){
 		this.ship = ship;
 		this.target = target;
@@ -29,7 +33,9 @@ public class ChaseTask : Task {
 		}
 
 		damageFunc = HandleDamage;
+		sinkFunc = HandleDestruction;
 		EventManager.Instance.Register<TookDamageEvent>(damageFunc);
+		EventManager.Instance.Register<ShipSinkEvent>(sinkFunc);
 
 
 		//have the boss spawn more enemies in addition to chasing the player
@@ -57,6 +63,7 @@ public class ChaseTask : Task {
 	/// </summary>
 	protected override void Cleanup(){
 		EventManager.Instance.Unregister<TookDamageEvent>(damageFunc);
+		EventManager.Instance.Unregister<ShipSinkEvent>(sinkFunc);
 	}
 
 
@@ -72,6 +79,15 @@ public class ChaseTask : Task {
 			if (damageEvent.damagePercent <= 0.0f){
 				SetStatus(TaskStatus.Succeeded);
 			}
+		}
+	}
+
+
+	private void HandleDestruction(Event e){
+		ShipSinkEvent sinkEvent = e as ShipSinkEvent;
+
+		if (sinkEvent.ship.gameObject == ship.gameObject){
+			Abort();
 		}
 	}
 }

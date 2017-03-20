@@ -31,6 +31,11 @@ public class BossBehavior : EnemyShip {
 	private const string PLAYER_OBJ = "Player ship";
 
 
+	//a reference to the GameManager; used to stop the game when the boss is destroyed
+	private GameManager gameManager;
+	private const string MANAGER_OBJ = "Game manager";
+
+
 	/// <summary>
 	/// Initialize variables and set up tasks.
 	/// </summary>
@@ -54,6 +59,9 @@ public class BossBehavior : EnemyShip {
 		ChaseTask chaseTask = new ChaseTask(this, GameObject.Find(PLAYER_OBJ).transform);
 		randomAttackTask.Then(chaseTask);
 		Services.TaskManager.AddTask(travelTask);
+
+
+		gameManager = GameObject.Find(MANAGER_OBJ).GetComponent<GameManager>();
 	}
 
 
@@ -110,7 +118,15 @@ public class BossBehavior : EnemyShip {
 
 
 	//this Update() is intentionally limited, since this ship is run by tasks instead of by its own update loop
-	protected override void Update(){ }
+	protected override void Update(){
+		if (Sinking && audioSource.isPlaying){
+			rb.MovePosition(transform.position + -Vector3.up * sinkSpeed);
+		} else if (Sinking){
+			EventManager.Instance.Fire(new ShipSinkEvent(GetComponent<SailingShip>()));
+			gameManager.GameHasStarted = false;
+			Destroy(gameObject);
+		}
+	}
 
 
 	/// <summary>
