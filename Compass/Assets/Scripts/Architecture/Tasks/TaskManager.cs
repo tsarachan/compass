@@ -53,6 +53,7 @@ public class TaskManager{
 	private void HandleCompletion(Task task, int taskIndex){
 		UnityEngine.Debug.Log("Handling completion for " + task.ToString());
 		if (task.NextTask != null && task.IsSucceeded){
+			Debug.Log("Adding " + task.NextTask);
 			AddTask(task.NextTask);
 		}
 

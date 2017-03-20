@@ -65,7 +65,7 @@ public class EventManager {
 			if (handlers == null){
 				registeredHandlers.Remove(type);
 			} else {
-				registeredHandlers[type] = handler;
+				registeredHandlers[type] = handlers;
 			}
 		}
 	}
