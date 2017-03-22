@@ -7,12 +7,22 @@ public class StateEnemy : EnemyShip {
 	//----------Tunable variables----------
 
 
+	//----------Internal variables----------
+
+	SpriteRenderer myRenderer;
+
+
 	private FSM<StateEnemy> myFSM;
 
 
-	private void Start(){
+	protected override void Start(){
+		myRenderer = GetComponent<SpriteRenderer>();
+
 		myFSM = new FSM<StateEnemy>(this);
 		myFSM.TransitionTo<Seeking>();
+
+		weatherOrganizer = GameObject.Find(WEATHER_OBJ).transform;
+		base.Start();
 	}
 
 
@@ -20,8 +30,10 @@ public class StateEnemy : EnemyShip {
 		myFSM.Update();
 	}
 
-	public void Test(){
-
+	public void ChangeAlpha(float newAlpha){
+		Color temp = myRenderer.color;
+		temp.a = newAlpha;
+		myRenderer.color = temp;
 	}
 
 
@@ -42,6 +54,8 @@ public class StateEnemy : EnemyShip {
 		private const string PLAYER_OBJ = "Player ship";
 		private Transform player;
 
+		ChaseTask chaseTask;
+
 
 		public override void Init(){
 			player = GameObject.Find(PLAYER_OBJ).transform;
@@ -49,14 +63,18 @@ public class StateEnemy : EnemyShip {
 
 
 		public override void OnEnter(){
-			Services.TaskManager.AddTask(new ChaseTask(Context.GetComponent<EnemyShip>(),
-													   GameObject.Find(PLAYER_OBJ).transform));
+			chaseTask = new ChaseTask(Context.GetComponent<EnemyShip>(),
+									  GameObject.Find(PLAYER_OBJ).transform);
+
+			Services.TaskManager.AddTask(chaseTask);
 		}
 
 
 		public override void Update(){
 			if (Vector3.Distance(Context.transform.position, player.position) <= detectDist){
 				Parent.TransitionTo<AttackPreparation>();
+				chaseTask.Abort();
+				Debug.Log("Transitioning to AttackPreparation");
 			}
 		}
 	}
@@ -72,6 +90,12 @@ public class StateEnemy : EnemyShip {
 		//how long a single pulse--full alpha to no alpha to full alpha--lasts
 		private float pulseDuration = 1.0f;
 
+
+		//variables to help execute the pulsing
+		private float timer = 0.0f;
+
+
+		//delegate that handles damage events
 		private TookDamageEvent.Handler damageFunc;
 
 
@@ -81,8 +105,8 @@ public class StateEnemy : EnemyShip {
 		}
 
 
-		public override void OnEnter(){
-			Context.Test();
+		public override void Update(){
+			
 		}
 
 
