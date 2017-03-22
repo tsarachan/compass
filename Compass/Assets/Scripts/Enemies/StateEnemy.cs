@@ -27,7 +27,7 @@ public class StateEnemy : EnemyShip {
 	}
 
 
-	private void Update(){
+	protected override void Update(){
 		myFSM.Update();
 	}
 
@@ -126,7 +126,7 @@ public class StateEnemy : EnemyShip {
 		}
 
 
-		public override void Cleanup(){
+		public override void OnExit(){
 			EventManager.Instance.Unregister<TookDamageEvent>(damageFunc);
 		}
 
@@ -140,6 +140,7 @@ public class StateEnemy : EnemyShip {
 			TookDamageEvent damageEvent = e as TookDamageEvent;
 
 			if (damageEvent.ship == Context.gameObject.GetComponent<SailingShip>()){
+				Context.ChangeAlpha(1.0f);
 				Parent.TransitionTo<Fleeing>();
 			}
 		}
@@ -148,6 +149,38 @@ public class StateEnemy : EnemyShip {
 
 	private class Fleeing : FSM<StateEnemy>.State {
 
+
+		//while fleeing, multiply the ship's speed by this amount
+		private float speedMult = 2.0f;
+
+
+		//how far from the player the ship wants to flee
+		//This must be greater than the Seeking state's detectDist, or else the ship won't actually flee
+		private float fleeDist = 15.0f;
+
+
+		//the player's transform, to flee from
+		private Transform player;
+		private const string PLAYER_OBJ = "Player ship";
+
+		public override void Init(){
+			Context.forwardSpeed *= speedMult;
+			player = GameObject.Find(PLAYER_OBJ).transform;
+		}
+
+
+		public override void Update(){
+			Vector3 farFromPlayer = (player.position - Context.transform.position).normalized * -100.0f;
+
+
+			Context.transform.rotation = Quaternion.LookRotation(Context.TurnToHeading(farFromPlayer));
+			Context.rb.MovePosition(Context.MoveForward());
+
+			if (Vector3.Distance(Context.transform.position, player.position) >= fleeDist){
+				Debug.Log("Transitioning to Seeking");
+				Parent.TransitionTo<Seeking>();
+			}
+		}
 	}
 
 
