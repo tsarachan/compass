@@ -28,7 +28,14 @@ public class StateEnemy : EnemyShip {
 
 
 	protected override void Update(){
-		myFSM.Update();
+		if (Sinking && audioSource.isPlaying){
+			rb.MovePosition(transform.position + -Vector3.up * sinkSpeed);
+		} else if (Sinking){
+			EventManager.Instance.Fire(new ShipSinkEvent(GetComponent<SailingShip>()));
+			Destroy(gameObject);
+		} else {
+			myFSM.Update();
+		}
 	}
 
 	public void ChangeAlpha(float newAlpha){
@@ -163,6 +170,8 @@ public class StateEnemy : EnemyShip {
 		private Transform player;
 		private const string PLAYER_OBJ = "Player ship";
 
+
+		//increase the ship's speed as it flees
 		public override void Init(){
 			Context.forwardSpeed *= speedMult;
 			player = GameObject.Find(PLAYER_OBJ).transform;
@@ -181,10 +190,64 @@ public class StateEnemy : EnemyShip {
 				Parent.TransitionTo<Seeking>();
 			}
 		}
+
+		//return the ship's speed to normal
+		public override void OnExit(){
+			Context.forwardSpeed /= speedMult;
+		}
 	}
 
 
 	private class Attack : FSM<StateEnemy>.State {
 
+
+		//the ship's heading as it rushes forward, and related variables
+		private Vector3 heading = new Vector3(0.0f, 0.0f, 0.0f);
+		private const string PLAYER_OBJ = "Player ship";
+
+
+		//the distance of the rush
+		private Vector3 start = new Vector3(0.0f, 0.0f, 0.0f);
+		float totalDist = 10.0f;
+
+
+		//while rushing, multiply the ship's speed by this amount
+		private float speedMult = 2.0f;
+
+
+		//if closer to the player than this distance, this ship explodes, damaging the player
+		float explodeDist = 2.0f;
+		private Transform player;
+
+
+		public override void Init(){
+			Context.forwardSpeed *= speedMult;
+			player = GameObject.Find(PLAYER_OBJ).transform;
+			heading = (player.position - Context.transform.position).normalized;
+			start = Context.transform.position;
+		}
+
+
+		public override void Update(){
+			Context.transform.rotation = Quaternion.LookRotation(Context.TurnToHeading(Context.transform.position +
+																					   heading));
+			Context.rb.MovePosition(Context.MoveForward());
+
+			Debug.Log(Vector3.Distance(Context.transform.position, start));
+
+			if (Vector3.Distance(Context.transform.position, player.position) <= explodeDist){
+				player.GetComponent<SailingShip>().GetHit();
+				Context.GetDestroyed();
+			}
+
+			if (Vector3.Distance(Context.transform.position, start) >= totalDist){
+				Parent.TransitionTo<Seeking>();
+			}
+		}
+
+
+		public override void OnExit(){
+			Context.forwardSpeed /= speedMult;
+		}
 	}
 }
