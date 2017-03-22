@@ -9,14 +9,15 @@ public class StateEnemy : EnemyShip {
 
 	//----------Internal variables----------
 
-	SpriteRenderer myRenderer;
+	private SpriteRenderer myRenderer;
+	private const string MODEL_OBJ = "Model";
 
 
 	private FSM<StateEnemy> myFSM;
 
 
 	protected override void Start(){
-		myRenderer = GetComponent<SpriteRenderer>();
+		myRenderer = transform.Find(MODEL_OBJ).GetComponent<SpriteRenderer>();
 
 		myFSM = new FSM<StateEnemy>(this);
 		myFSM.TransitionTo<Seeking>();
@@ -82,10 +83,9 @@ public class StateEnemy : EnemyShip {
 
 	private class AttackPreparation : FSM<StateEnemy>.State {
 
-
 		//how many times the enemy will pulse
 		private int numPulses = 5;
-
+		private int pulsesSoFar = 0;
 
 		//how long a single pulse--full alpha to no alpha to full alpha--lasts
 		private float pulseDuration = 1.0f;
@@ -95,6 +95,10 @@ public class StateEnemy : EnemyShip {
 		private float timer = 0.0f;
 
 
+		//the context's renderer--used to pulse
+		private SpriteRenderer contextRenderer;
+
+
 		//delegate that handles damage events
 		private TookDamageEvent.Handler damageFunc;
 
@@ -102,11 +106,23 @@ public class StateEnemy : EnemyShip {
 		public override void Init(){
 			damageFunc = HandleDamage;
 			EventManager.Instance.Register<TookDamageEvent>(damageFunc);
+			contextRenderer = Context.gameObject.GetComponent<SpriteRenderer>();
 		}
 
 
 		public override void Update(){
-			
+			timer += Time.deltaTime;
+
+			Context.ChangeAlpha(timer/pulseDuration);
+	
+			if (timer >= pulseDuration){
+				timer = 0.0f;
+				pulsesSoFar++;
+			}
+
+			if (pulsesSoFar >= numPulses){
+				Parent.TransitionTo<Attack>();
+			}
 		}
 
 
@@ -131,6 +147,11 @@ public class StateEnemy : EnemyShip {
 
 
 	private class Fleeing : FSM<StateEnemy>.State {
+
+	}
+
+
+	private class Attack : FSM<StateEnemy>.State {
 
 	}
 }
