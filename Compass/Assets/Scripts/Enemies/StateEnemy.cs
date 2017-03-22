@@ -233,8 +233,6 @@ public class StateEnemy : EnemyShip {
 																					   heading));
 			Context.rb.MovePosition(Context.MoveForward());
 
-			Debug.Log(Vector3.Distance(Context.transform.position, start));
-
 			if (Vector3.Distance(Context.transform.position, player.position) <= explodeDist){
 				player.GetComponent<SailingShip>().GetHit();
 				Context.GetDestroyed();
