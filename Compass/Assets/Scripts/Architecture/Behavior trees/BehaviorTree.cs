@@ -102,10 +102,10 @@
 
 		public override Result Tick(T context){
 			foreach (var child in Children){
-				if (child.Tick(context)) return true; 
+				if (child.Tick(context) == Result.SUCCEED) return Result.SUCCEED; 
 			}
 
-			return false;
+			return Result.FAIL;
 		}
 	}
 
@@ -117,10 +117,10 @@
 
 		public override Result Tick(T context){
 			foreach (var child in Children){
-				if (!child.Tick(context)) return false;
+				if (child.Tick(context) != Result.SUCCEED) return Result.FAIL;
 			}
 
-			return true;
+			return Result.SUCCEED;
 		}
 	}
 
@@ -147,7 +147,13 @@
 
 
 		public override Result Tick(T context){
-			return !Child.Tick(context);
+			if(Child.Tick(context) == Result.SUCCEED){
+				return Result.FAIL;
+			} else if (Child.Tick(context) == Result.FAIL){
+				return Result.SUCCEED;
+			} else {
+				return Result.ERROR;
+			}
 		}
 	}
 
