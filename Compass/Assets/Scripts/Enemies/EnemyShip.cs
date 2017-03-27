@@ -20,7 +20,7 @@ public class EnemyShip : SailingShip {
 	protected Transform closestCurrent = null;
 
 
-	//initial variables
+	//initialize variables
 	protected override void Start (){
 		base.Start();
 		weatherOrganizer = GameObject.Find(WEATHER_OBJ).transform;

@@ -32,6 +32,7 @@ public class StateEnemy : EnemyShip {
 			rb.MovePosition(transform.position + -Vector3.up * sinkSpeed);
 		} else if (Sinking){
 			EventManager.Instance.Fire(new ShipSinkEvent(GetComponent<SailingShip>()));
+			myFSM.Clear();
 			Destroy(gameObject);
 		} else {
 			myFSM.Update();
@@ -82,7 +83,6 @@ public class StateEnemy : EnemyShip {
 			if (Vector3.Distance(Context.transform.position, player.position) <= detectDist){
 				Parent.TransitionTo<AttackPreparation>();
 				chaseTask.Abort();
-				Debug.Log("Transitioning to AttackPreparation");
 			}
 		}
 	}
@@ -138,6 +138,11 @@ public class StateEnemy : EnemyShip {
 		}
 
 
+		public override void Cleanup(){
+			EventManager.Instance.Unregister<TookDamageEvent>(damageFunc);
+		}
+
+
 		/// <summary>
 		/// Handle damage events. When an event indicates that this state's ship is damaged while in this state,
 		/// transition to the fleeing state.
@@ -186,7 +191,6 @@ public class StateEnemy : EnemyShip {
 			Context.rb.MovePosition(Context.MoveForward());
 
 			if (Vector3.Distance(Context.transform.position, player.position) >= fleeDist){
-				Debug.Log("Transitioning to Seeking");
 				Parent.TransitionTo<Seeking>();
 			}
 		}

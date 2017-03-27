@@ -29,6 +29,9 @@ public class FSM<TContext> {
 	}
 
 
+	/// <summary>
+	/// Update the current state, and transition between states as necessary
+	/// </summary>
 	public void Update(){
 		//handle pending transitions started outside this FSM
 		PerformPendingTransition();
@@ -41,7 +44,7 @@ public class FSM<TContext> {
 		PerformPendingTransition();
 	}
 
-	//queues up a transition to a new state
+	//sets up a transition to a new state
 	public void TransitionTo<TState>() where TState : State {
 		pendingState = GetOrCreateState<TState>();
 	}
@@ -58,6 +61,11 @@ public class FSM<TContext> {
 	}
 
 
+	/// <summary>
+	/// Get a state, either by making it in the first instance or by retrieving an already-made one.
+	/// </summary>
+	/// <returns>The state.</returns>
+	/// <typeparam name="TState">The type of state needed.</typeparam>
 	private TState GetOrCreateState<TState>() where TState : State {
 		State state;
 
@@ -74,6 +82,18 @@ public class FSM<TContext> {
 	}
 
 
+	//clear cached states
+	public void Clear()
+	{
+		foreach (var state in stateCache.Values)
+		{
+			state.Cleanup();
+		}
+		stateCache.Clear();
+	}
+
+
+	//class structure for states
 	public abstract class State {
 
 
