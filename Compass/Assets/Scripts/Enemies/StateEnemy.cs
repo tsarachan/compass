@@ -135,11 +135,13 @@ public class StateEnemy : EnemyShip {
 
 		public override void OnExit(){
 			EventManager.Instance.Unregister<TookDamageEvent>(damageFunc);
+			timer = 0.0f;
 		}
 
 
 		public override void Cleanup(){
 			EventManager.Instance.Unregister<TookDamageEvent>(damageFunc);
+			timer = 0.0f;
 		}
 
 
