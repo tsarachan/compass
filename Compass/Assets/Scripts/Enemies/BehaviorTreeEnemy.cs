@@ -268,8 +268,11 @@ public class BehaviorTreeEnemy : EnemyShip {
 	private class PrepareToAttack : Node<BehaviorTreeEnemy>{
 		public override Result Tick(BehaviorTreeEnemy enemy){
 			enemy.ChargeUpAttack();
-			enemy.heading = enemy.AimDash();
-			enemy.TurnToHeadingByTask(enemy.player.position);
+
+			if (enemy.pulsesSoFar == 0){
+				enemy.heading = enemy.AimDash();
+				enemy.TurnToHeadingByTask(enemy.player.position);
+			}
 			//enemy.transform.rotation = Quaternion.LookRotation(enemy.TurnToHeading(player.position));
 			return Result.SUCCEED;
 		}
