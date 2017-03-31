@@ -25,7 +25,7 @@ public class BehaviorTreeEnemy : EnemyShip {
 	private Tree<BehaviorTreeEnemy> tree;
 
 
-	#region alpha-pulse variables
+	#region attack preparation variables
 
 	//how many times the enemy will pulse
 	[SerializeField] private int numPulses = 5;
@@ -37,6 +37,12 @@ public class BehaviorTreeEnemy : EnemyShip {
 
 	//variables to help execute the pulsing
 	private float pulseTimer = 0.0f;
+
+	#endregion
+
+	#region fleeing variables
+
+	private bool scared = false;
 
 	#endregion
 
@@ -67,15 +73,15 @@ public class BehaviorTreeEnemy : EnemyShip {
 
 		tree = new Tree<BehaviorTreeEnemy>(new Selector<BehaviorTreeEnemy>(
 			new Sequence<BehaviorTreeEnemy>(
-				new Not<BehaviorTreeEnemy>(new IsAttackPreparationUnderway()),
-				new Not<BehaviorTreeEnemy>(new IsPlayerClose()), //returns success if player is far away
-				new Seek() //returns success after moving enemy toward player
+				new IsPlayerClose(), //returns success if the player is nearby
+				new IsScared(), //returns success if hit during attack preparation
+				new Flee()
 			),
 
 			new Sequence<BehaviorTreeEnemy>(
-				new IsNewlyDamaged(), //returns success if there's been a recent damage event
-				new Not<BehaviorTreeEnemy>(new IsDonePreparing()), //returns success if the enemy is not yet ready to attack
-				new Flee()
+				new Not<BehaviorTreeEnemy>(new IsAttackPreparationUnderway()),
+				new Not<BehaviorTreeEnemy>(new IsPlayerClose()), //returns success if player is far away
+				new Seek() //returns success after moving enemy toward player
 			),
 
 			new Sequence<BehaviorTreeEnemy>(
@@ -96,7 +102,7 @@ public class BehaviorTreeEnemy : EnemyShip {
 		base.Start();
 	}
 
-	#region test sandbox
+	#region condition test sandbox
 
 	private bool CheckPlayerDetectable(){
 		if (Vector3.Distance(transform.position, player.position) > detectDist){
@@ -192,9 +198,50 @@ public class BehaviorTreeEnemy : EnemyShip {
 	}
 
 
+	/// <summary>
+	/// This version of GetHit adds a check against variables that are greater than zero during attack preparation,
+	/// so that this enemy knows whether to flee.
+	/// </summary>
+	public override void GetHit(){
+		if (damageValues.Count > 0){
+			currentHealth -= damageValues[0];
+			damageValues.RemoveAt(0);
+		} else {
+			currentHealth -= defaultDamage;
+		}
+
+		//send out an event; used for, e.g., the boss to decrement its health bar
+		EventManager.Instance.Fire(new TookDamageEvent(this,
+			GetHealthPercentage()));
+
+		//Debug.Log("Event fired");
+		SetFires();
+
+		if (pulsesSoFar > 0 || pulseTimer > Mathf.Epsilon){
+			scared = true;
+		}
+
+		if (currentHealth <= 0){
+			GetDestroyed();
+		}
+	}
+
+
 	#region nodes
 
 	//conditions
+
+
+	//checks if the ship is scared
+	private class IsScared : Node<BehaviorTreeEnemy>{
+		public override Result Tick(BehaviorTreeEnemy enemy){
+			if (enemy.scared){
+				return Result.SUCCEED;
+			} else {
+				return Result.FAIL;
+			}
+		}
+	}
 
 
 	//checks if the ship is getting ready to attack
@@ -215,6 +262,7 @@ public class BehaviorTreeEnemy : EnemyShip {
 			if(enemy.CheckPlayerDetectable()){
 				return Result.SUCCEED;
 			} else {
+				enemy.scared = false; //the ship is never scared when the player is far
 				return Result.FAIL;
 			}
 		}
@@ -282,6 +330,10 @@ public class BehaviorTreeEnemy : EnemyShip {
 	//move away from the player
 	private class Flee : Node<BehaviorTreeEnemy>{
 		public override Result Tick(BehaviorTreeEnemy enemy){
+
+			//don't allow attack preparation while fleeing
+			enemy.pulsesSoFar = 0;
+			enemy.pulseTimer = 0.0f;
 			enemy.RunFromPlayer();
 			return Result.SUCCEED;
 		}
