@@ -67,23 +67,24 @@ public class BehaviorTreeEnemy : EnemyShip {
 
 		tree = new Tree<BehaviorTreeEnemy>(new Selector<BehaviorTreeEnemy>(
 			new Sequence<BehaviorTreeEnemy>(
-				new IsPlayerFar(), //returns success if player is far away
+				new Not<BehaviorTreeEnemy>(new IsAttackPreparationUnderway()),
+				new Not<BehaviorTreeEnemy>(new IsPlayerClose()), //returns success if player is far away
 				new Seek() //returns success after moving enemy toward player
 			),
 
 			new Sequence<BehaviorTreeEnemy>(
 				new IsNewlyDamaged(), //returns success if there's been a recent damage event
-				new IsStillPreparing(), //returns success if the enemy is not yet ready to attack
+				new Not<BehaviorTreeEnemy>(new IsDonePreparing()), //returns success if the enemy is not yet ready to attack
 				new Flee()
 			),
 
 			new Sequence<BehaviorTreeEnemy>(
-				new IsStillPreparing(), //returns success if enemy is not yet ready to attack
+				new Not<BehaviorTreeEnemy>(new IsDonePreparing()), //returns success if enemy is not yet ready to attack
 				new PrepareToAttack() //returns success after preparing to attack
 			),
 
 			new Sequence<BehaviorTreeEnemy>(
-				new IsStillDashing(), //returns success if enemy has not reached the destination
+				new Not<BehaviorTreeEnemy>(new IsDoneDashing()), //returns success if enemy has not reached the destination
 				new DashForward() //returns success after dashing the enemy forward
 			),
 
@@ -107,19 +108,19 @@ public class BehaviorTreeEnemy : EnemyShip {
 
 
 	private bool CheckIfAttackCharged(){
-		Debug.Log("pulsesSoFar == " + pulsesSoFar + ", numPulses == " + numPulses);
 		if (pulsesSoFar >= numPulses){
-			Debug.Log("returning true");
 			return true;
 		} else {
-			Debug.Log("returning false");
 			return false;
 		}
 	}
 
 
 	private bool CheckIfDoneCharging(){
+		rushTimer += Time.deltaTime;
+
 		if (rushTimer >= rushDuration){
+			pulsesSoFar = 0; //reset attack preparation, so that this ship can attack again
 			return true;
 		} else {
 			return false;
@@ -171,7 +172,6 @@ public class BehaviorTreeEnemy : EnemyShip {
 
 
 	private void Dash(){
-		Debug.Log("Dashing; heading == " + heading + ", forwardSpeed == " + forwardSpeed + ", speedMult == " + speedMult);
 		rb.MovePosition(transform.position + heading * forwardSpeed * speedMult);
 	}
 
@@ -195,10 +195,22 @@ public class BehaviorTreeEnemy : EnemyShip {
 	//conditions
 
 
-	//checks if player is too far to be detected
-	private class IsPlayerFar : Node<BehaviorTreeEnemy>{
+	//checks if the ship is getting ready to attack
+	private class IsAttackPreparationUnderway : Node<BehaviorTreeEnemy>{
 		public override Result Tick(BehaviorTreeEnemy enemy){
-			if(!enemy.CheckPlayerDetectable()){
+			if (enemy.pulsesSoFar > 0){
+				return Result.SUCCEED;
+			} else {
+				return Result.FAIL;
+			}
+		}
+	}
+
+
+	//checks if player is too far to be detected
+	private class IsPlayerClose : Node<BehaviorTreeEnemy>{
+		public override Result Tick(BehaviorTreeEnemy enemy){
+			if(enemy.CheckPlayerDetectable()){
 				return Result.SUCCEED;
 			} else {
 				return Result.FAIL;
@@ -208,12 +220,12 @@ public class BehaviorTreeEnemy : EnemyShip {
 
 
 	//checks if the attack is not yet ready
-	private class IsStillPreparing : Node<BehaviorTreeEnemy>{
+	private class IsDonePreparing : Node<BehaviorTreeEnemy>{
 		public override Result Tick(BehaviorTreeEnemy enemy){
 			if (enemy.CheckIfAttackCharged()){
-				return Result.FAIL;
-			} else {
 				return Result.SUCCEED;
+			} else {
+				return Result.FAIL;
 			}
 		}
 	}
@@ -226,14 +238,12 @@ public class BehaviorTreeEnemy : EnemyShip {
 	}
 
 
-	private class IsStillDashing : Node<BehaviorTreeEnemy>{
+	private class IsDoneDashing : Node<BehaviorTreeEnemy>{
 		public override Result Tick(BehaviorTreeEnemy enemy){
 			if (enemy.CheckIfDoneCharging()){
-				Debug.Log("Done dashing");
-				return Result.FAIL;
-			} else {
-				Debug.Log("Still dashing");
 				return Result.SUCCEED;
+			} else {
+				return Result.FAIL;
 			}
 		}
 	}
@@ -245,6 +255,7 @@ public class BehaviorTreeEnemy : EnemyShip {
 	//turn and move toward the player
 	private class Seek : Node<BehaviorTreeEnemy>{
 		public override Result Tick(BehaviorTreeEnemy enemy){
+			Debug.Log("Seeking");
 			enemy.TurnToHeadingByTask(enemy.player.position);
 			enemy.MoveForwardByTask();
 			return Result.SUCCEED;
@@ -255,10 +266,10 @@ public class BehaviorTreeEnemy : EnemyShip {
 	//pulse the enemy's sprite's alpha
 	private class PrepareToAttack : Node<BehaviorTreeEnemy>{
 		public override Result Tick(BehaviorTreeEnemy enemy){
+			Debug.Log("Preparing");
 			enemy.ChargeUpAttack();
 			enemy.heading = enemy.AimDash();
 			enemy.TurnToHeadingByTask(enemy.player.position);
-			Debug.Log("Charging attack");
 			//enemy.transform.rotation = Quaternion.LookRotation(enemy.TurnToHeading(player.position));
 			return Result.SUCCEED;
 		}
@@ -268,8 +279,8 @@ public class BehaviorTreeEnemy : EnemyShip {
 	//move away from the player
 	private class Flee : Node<BehaviorTreeEnemy>{
 		public override Result Tick(BehaviorTreeEnemy enemy){
-			enemy.RunFromPlayer();
 			Debug.Log("Fleeing");
+			enemy.RunFromPlayer();
 			return Result.SUCCEED;
 		}
 	}
@@ -278,8 +289,8 @@ public class BehaviorTreeEnemy : EnemyShip {
 	//move toward the player
 	private class DashForward : Node<BehaviorTreeEnemy>{
 		public override Result Tick(BehaviorTreeEnemy enemy){
-			enemy.Dash();
 			Debug.Log("Dashing");
+			enemy.Dash();
 			return Result.SUCCEED;
 		}
 	}
