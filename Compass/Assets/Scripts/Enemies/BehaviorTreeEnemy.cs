@@ -121,6 +121,7 @@ public class BehaviorTreeEnemy : EnemyShip {
 
 		if (rushTimer >= rushDuration){
 			pulsesSoFar = 0; //reset attack preparation, so that this ship can attack again
+			rushTimer = 0.0f; //reset the rush timer, so that the ship can rush again
 			return true;
 		} else {
 			return false;
@@ -143,6 +144,7 @@ public class BehaviorTreeEnemy : EnemyShip {
 
 		if (pulseTimer >= pulseDuration){
 			pulsesSoFar++;
+			Debug.Log("pulsesSoFar == " + pulsesSoFar);
 			pulseTimer = 0.0f;
 		}
 
@@ -255,7 +257,6 @@ public class BehaviorTreeEnemy : EnemyShip {
 	//turn and move toward the player
 	private class Seek : Node<BehaviorTreeEnemy>{
 		public override Result Tick(BehaviorTreeEnemy enemy){
-			Debug.Log("Seeking");
 			enemy.TurnToHeadingByTask(enemy.player.position);
 			enemy.MoveForwardByTask();
 			return Result.SUCCEED;
@@ -266,7 +267,6 @@ public class BehaviorTreeEnemy : EnemyShip {
 	//pulse the enemy's sprite's alpha
 	private class PrepareToAttack : Node<BehaviorTreeEnemy>{
 		public override Result Tick(BehaviorTreeEnemy enemy){
-			Debug.Log("Preparing");
 			enemy.ChargeUpAttack();
 			enemy.heading = enemy.AimDash();
 			enemy.TurnToHeadingByTask(enemy.player.position);
@@ -279,7 +279,6 @@ public class BehaviorTreeEnemy : EnemyShip {
 	//move away from the player
 	private class Flee : Node<BehaviorTreeEnemy>{
 		public override Result Tick(BehaviorTreeEnemy enemy){
-			Debug.Log("Fleeing");
 			enemy.RunFromPlayer();
 			return Result.SUCCEED;
 		}
@@ -289,7 +288,6 @@ public class BehaviorTreeEnemy : EnemyShip {
 	//move toward the player
 	private class DashForward : Node<BehaviorTreeEnemy>{
 		public override Result Tick(BehaviorTreeEnemy enemy){
-			Debug.Log("Dashing");
 			enemy.Dash();
 			return Result.SUCCEED;
 		}

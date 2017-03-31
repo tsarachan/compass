@@ -4448,7 +4448,7 @@ MonoBehaviour:
   boundaryLeeway: 200
   detectDist: 5
   numPulses: 5
-  rushDuration: 3
+  rushDuration: 0.3
 --- !u!82 &1204170921
 AudioSource:
   m_ObjectHideFlags: 0
