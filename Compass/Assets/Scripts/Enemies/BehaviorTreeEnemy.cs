@@ -12,6 +12,10 @@ public class BehaviorTreeEnemy : EnemyShip {
 	[SerializeField] private float detectDist = 10.0f;
 
 
+	//distance at which this enemy will consider itself to have successfully rammed the player during an attack
+	[SerializeField] private float ramDist = 2.0f;
+
+
 	//----------Internal variables----------
 
 
@@ -91,7 +95,8 @@ public class BehaviorTreeEnemy : EnemyShip {
 
 			new Sequence<BehaviorTreeEnemy>(
 				new Not<BehaviorTreeEnemy>(new IsDoneDashing()), //returns success if enemy has not reached the destination
-				new DashForward() //returns success after dashing the enemy forward
+				new DashForward(), //returns success after dashing the enemy forward
+				new TryToAttack() //returns success after attempting to ram the player
 			),
 
 			new Seek()
@@ -150,7 +155,6 @@ public class BehaviorTreeEnemy : EnemyShip {
 
 		if (pulseTimer >= pulseDuration){
 			pulsesSoFar++;
-			Debug.Log("pulsesSoFar == " + pulsesSoFar);
 			pulseTimer = 0.0f;
 		}
 
@@ -344,6 +348,19 @@ public class BehaviorTreeEnemy : EnemyShip {
 	private class DashForward : Node<BehaviorTreeEnemy>{
 		public override Result Tick(BehaviorTreeEnemy enemy){
 			enemy.Dash();
+			return Result.SUCCEED;
+		}
+	}
+
+
+	//hit the player, and start sinking, if in close
+	private class TryToAttack : Node<BehaviorTreeEnemy>{
+		public override Result Tick(BehaviorTreeEnemy enemy){
+			if (Vector3.Distance(enemy.transform.position, enemy.player.position) < enemy.ramDist){
+				enemy.player.GetComponent<SailingShip>().GetHit();
+				enemy.GetDestroyed();
+			}
+
 			return Result.SUCCEED;
 		}
 	}
