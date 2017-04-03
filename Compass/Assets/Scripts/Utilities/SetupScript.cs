@@ -13,6 +13,5 @@ public class SetupScript : MonoBehaviour {
 			GameObject cannonball = Instantiate(Resources.Load(CANNONBALL)) as GameObject;
 			ObjectPooling.ObjectPool.AddObj(cannonball);
 		}
-		
 	}
 }

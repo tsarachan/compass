@@ -48,6 +48,7 @@ public abstract class SailingShip : MonoBehaviour {
 
 	//variables for accessing the current state of the weather
 	protected Wind windScript;
+	protected const string SCENE_OBJ = "Level1Scene";
 	protected const string WEATHER_OBJ = "Weather";
 	protected const string WIND_OBJ = "Wind";
 	protected const string CURRENT_OBJ = "Current";
@@ -100,7 +101,7 @@ public abstract class SailingShip : MonoBehaviour {
 
 	//initialize variables
 	protected virtual void Start(){
-		windScript = transform.root.Find(WEATHER_OBJ).GetComponent<Wind>();
+		windScript = transform.root.Find(SCENE_OBJ).Find(WEATHER_OBJ).GetComponent<Wind>();
 		rb = GetComponent<Rigidbody>();
 		damageValues = ShuffleList(damageValues);
 		audioSource = GetComponent<AudioSource>();

@@ -11,4 +11,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb2651fc6c8a948bc94fc78fc355a6cb, type: 3}
   m_Name: Prefab database
   m_EditorClassIdentifier: 
-  levels: []
+  levels:
+  - {fileID: 1593197508052998, guid: 96952b1a7930145bd87995329f5ff3c8, type: 2}
+  - {fileID: 1830644584961188, guid: d6ddfa50e77464d18b35a5b74f951cd0, type: 2}
