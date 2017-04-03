@@ -50,7 +50,6 @@ public class BehaviorTreeEnemy : EnemyShip {
 
 	#endregion
 
-
 	#region dash attack variables
 
 	//the ship's heading as it rushes forward
@@ -79,11 +78,11 @@ public class BehaviorTreeEnemy : EnemyShip {
 			new Sequence<BehaviorTreeEnemy>(
 				new IsPlayerClose(), //returns success if the player is nearby
 				new IsScared(), //returns success if hit during attack preparation
-				new Flee()
+				new Flee() //returns success after fleeing
 			),
 
 			new Sequence<BehaviorTreeEnemy>(
-				new Not<BehaviorTreeEnemy>(new IsAttackPreparationUnderway()),
+				new Not<BehaviorTreeEnemy>(new IsAttackPreparationUnderway()), //returns success if not preparing to attack
 				new Not<BehaviorTreeEnemy>(new IsPlayerClose()), //returns success if player is far away
 				new Seek() //returns success after moving enemy toward player
 			),
@@ -99,6 +98,8 @@ public class BehaviorTreeEnemy : EnemyShip {
 				new TryToAttack() //returns success after attempting to ram the player
 			),
 
+
+			//default behavior
 			new Seek()
 
 		));
