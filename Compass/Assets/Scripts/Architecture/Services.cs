@@ -22,4 +22,23 @@ public abstract class Services {
 		}
 		set { levelManager = value; }
 	}
+
+
+	private static SceneManager<TransitionData> sceneManager;
+	public static SceneManager<TransitionData> SceneManager{
+		get {
+			Debug.Assert(sceneManager != null);
+			return sceneManager;
+		}
+		set { sceneManager = value; }
+	}
+
+	private static PrefabDatabase prefabDatabase;
+	public static PrefabDatabase PrefabDatabase{
+		get {
+			Debug.Assert(prefabDatabase != null);
+			return prefabDatabase;
+		}
+		set { prefabDatabase = value; }
+	}
 }

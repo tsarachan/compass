@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+	private const string PREFAB_DATABASE_OBJ = "Prefab database";
+
+
 
 	public bool GameHasStarted { get; set; }
 
@@ -14,9 +17,11 @@ public class GameManager : MonoBehaviour {
 	private void Awake () {
 		Services.TaskManager = new TaskManager();
 		Services.LevelManager = new LevelManager();
-		Services.LevelManager.Initialize();
+		Services.PrefabDatabase = Resources.Load<PrefabDatabase>(PREFAB_DATABASE_OBJ);
+		Services.SceneManager = new SceneManager<TransitionData>(gameObject, Services.PrefabDatabase.Levels);
+		Services.SceneManager.PushScene<TitleScene>();
 
-		GameHasStarted = true;
+		GameHasStarted = false;
 	}
 
 
