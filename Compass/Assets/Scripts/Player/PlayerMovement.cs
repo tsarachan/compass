@@ -19,7 +19,15 @@ public class PlayerMovement : SailingShip {
 		Turn();
 
 
-		base.Update();
+		if (!Sinking){
+			rb.MovePosition(MoveForward());
+		} else if (Sinking && audioSource.isPlaying){
+			rb.MovePosition(transform.position + -Vector3.up * sinkSpeed);
+		} else if (Sinking){
+			EventManager.Instance.Fire(new ShipSinkEvent(GetComponent<SailingShip>()));
+			Services.SceneManager.Swap<GameOverScene>(new TransitionData(false));
+			Destroy(gameObject);
+		}
 	}
 
 
