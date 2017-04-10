@@ -664,9 +664,9 @@ GameObject:
   - component: {fileID: 54882172778274160}
   - component: {fileID: 65769297308440744}
   - component: {fileID: 82348272604555332}
-  - component: {fileID: 114119495389614028}
+  - component: {fileID: 114149909653341286}
   m_Layer: 0
-  m_Name: Behavior tree enemy
+  m_Name: Game over enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7473,7 +7473,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   direction: {x: 1, y: 0, z: 0}
   speed: 1
---- !u!114 &114119495389614028
+--- !u!114 &114149909653341286
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -7481,21 +7481,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1301539298066516}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d0d6fc5fdc5f4be5a8d2d6b6db15033, type: 3}
+  m_Script: {fileID: 11500000, guid: fd7009cf8c2d84cbfa7cfe67f689e143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   forwardSpeed: 0.5
-  rotationSpeed: 0.005
+  rotationSpeed: 0.01
   health: 10
   damageValues: 03000000030000000300000003000000
   destroyedClip: {fileID: 8300000, guid: 285c8924f86fd4e50b20912683d960e7, type: 3}
   sinkSpeed: 0.02
   dotAdjustment: 1
-  boundaryLeeway: 200
-  detectDist: 5
-  ramDist: 2
-  numPulses: 5
-  rushDuration: 0.3
+  boundaryLeeway: 2
 --- !u!114 &114149967298212714
 MonoBehaviour:
   m_ObjectHideFlags: 1
