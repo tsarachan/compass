@@ -31,7 +31,7 @@ public class AttackTask : Task {
 		timer += Time.deltaTime;
 
 		if (timer >= shotDelay){
-			myShip.Attack(target);
+			myShip.LaunchProjectile(target);
 
 			SetStatus(TaskStatus.Succeeded);
 		}
