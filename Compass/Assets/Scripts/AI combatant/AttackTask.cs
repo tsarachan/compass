@@ -36,4 +36,9 @@ public class AttackTask : Task {
 			SetStatus(TaskStatus.Succeeded);
 		}
 	}
+
+
+	protected override void OnSuccess(){
+		myShip.ChooseNextTask();
+	}
 }

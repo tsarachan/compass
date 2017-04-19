@@ -36,4 +36,9 @@ public class RepairTask : Task {
 			SetStatus(TaskStatus.Succeeded);
 		}
 	}
+
+
+	protected override void OnSuccess(){
+		myShip.ChooseNextTask();
+	}
 }

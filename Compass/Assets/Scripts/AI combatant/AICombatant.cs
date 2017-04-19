@@ -145,6 +145,14 @@ public class AICombatant : MonoBehaviour {
 	}
 
 
+	public void ChooseNextTask(){
+		Debug.Log("ChooseNextTask() called");
+		tree = new Tree<AICombatant>(new Selector<AICombatant>(attackSelector, fleeSequence, repairSequence));
+
+		tree.Tick(this);
+	}
+
+
 	/*----------------------------------------------------
 	 * Behavior tree
 	 * 
@@ -161,6 +169,7 @@ public class AICombatant : MonoBehaviour {
 
 	private class IsTargetWithinFleeDistance : Node<AICombatant> {
 		public override Result Tick (AICombatant context){
+			Debug.Log("IsTargetWithinFleeDistance called");
 			if (context.CheckIfWithinFleeDistance()){
 				return Result.SUCCEED;
 			} else {
@@ -177,6 +186,7 @@ public class AICombatant : MonoBehaviour {
 
 	private class IsDamaged : Node<AICombatant> {
 		public override Result Tick (AICombatant context){
+			Debug.Log("IsDamaged called");
 			if (context.CheckIfDamaged()){
 				return Result.SUCCEED;
 			} else {
@@ -193,6 +203,7 @@ public class AICombatant : MonoBehaviour {
 
 	private class IsTargetInRange : Node<AICombatant> {
 		public override Result Tick (AICombatant context){
+			Debug.Log("IsTargetInRange called");
 			if (context.CheckIfTargetInRange()){
 				return Result.SUCCEED;
 			} else {
@@ -215,6 +226,7 @@ public class AICombatant : MonoBehaviour {
 
 	private class Flee : Node<AICombatant> {
 		public override Result Tick(AICombatant context){
+			Debug.Log("Flee called");
 			context.myTaskManager.AddTask(new FleeTask(context, context.enemy, context.fleeDist));
 
 			return Result.SUCCEED;
@@ -224,6 +236,7 @@ public class AICombatant : MonoBehaviour {
 
 	private class Repair : Node<AICombatant> {
 		public override Result Tick(AICombatant context){
+			Debug.Log("Repair called");
 			context.myTaskManager.AddTask(new RepairTask(context, context.repairAmount, context.repairDelay));
 
 			return Result.SUCCEED;
@@ -233,6 +246,7 @@ public class AICombatant : MonoBehaviour {
 
 	private class Pursue : Node<AICombatant> {
 		public override Result Tick(AICombatant context){
+			Debug.Log("Pursue called");
 			context.myTaskManager.AddTask(new PursueTask(context, context.enemy, context.shotRange));
 
 			return Result.SUCCEED;
@@ -242,6 +256,7 @@ public class AICombatant : MonoBehaviour {
 
 	private class Attack : Node<AICombatant> {
 		public override Result Tick (AICombatant context){
+			Debug.Log("Attack called");
 			context.myTaskManager.AddTask(new AttackTask(context, context.enemy, context.shotDelay));
 
 			return Result.SUCCEED;
