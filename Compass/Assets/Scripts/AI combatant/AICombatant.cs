@@ -69,6 +69,12 @@ public class AICombatant : MonoBehaviour {
 	private Transform enemy;
 
 
+	//ships use these to pick their enemies
+	private const string RED = "Red";
+	private const string BLUE = "Blue";
+	private const string AI_COMBATANT_OBJ = "AI combatant ";
+
+
 	//priorities
 	#region priorities
 	private Priority attack;
@@ -106,7 +112,7 @@ public class AICombatant : MonoBehaviour {
 		projectile = Resources.Load(PROJECTILE_OBJ) as GameObject;
 		projectileOrganizer = GameObject.Find(PROJECTILE_ORGANIZER).transform;
 
-		enemy = GameObject.Find("AI combatant blue").transform;
+		enemy = ChooseEnemy();
 
 
 		myTaskManager.AddTask(new AttackTask(this, enemy, shotDelay));
@@ -115,6 +121,36 @@ public class AICombatant : MonoBehaviour {
 		attack = MakeAttackPriority();
 		flee = MakeFleePriority();
 		repair = MakeRepairPriority();
+	}
+
+
+	private Transform ChooseEnemy(){
+		Transform closestEnemy = transform;;
+		float closestDistance = 100000000.0f; //nonsense initialization; should always be larger than the play area
+
+		if (gameObject.tag == RED){
+			GameObject[] blueTeam = GameObject.FindGameObjectsWithTag(BLUE);
+
+			foreach (GameObject enemy in blueTeam){
+				if (Vector3.Distance(transform.position, enemy.transform.position) < closestDistance){
+					closestDistance = Vector3.Distance(transform.position, enemy.transform.position);
+					closestEnemy = enemy.transform;
+				}
+			}
+		} else if (gameObject.tag == BLUE){
+			GameObject[] redTeam = GameObject.FindGameObjectsWithTag(RED);
+
+			foreach (GameObject enemy in redTeam){
+				if (Vector3.Distance(transform.position, enemy.transform.position) < closestDistance){
+					closestDistance = Vector3.Distance(transform.position, enemy.transform.position);
+					closestEnemy = enemy.transform;
+				}
+			}
+		}
+
+		Debug.Assert(closestEnemy != transform);
+
+		return closestEnemy;
 	}
 
 
@@ -152,7 +188,7 @@ public class AICombatant : MonoBehaviour {
 
 
 	public void ChooseNextTask(){
-		Debug.Log("ChooseNextTask() called");
+		//Debug.Log("ChooseNextTask() called");
 
 		Priority priority1;
 		Priority priority2;
@@ -162,7 +198,7 @@ public class AICombatant : MonoBehaviour {
 		priorities = PutPrioritiesInOrder(priorities);
 
 
-		Debug.Log(priorities);
+		//Debug.Log(priorities);
 
 		tree = new Tree<AICombatant>(new Selector<AICombatant>(priorities[0].OrderToExecute,
 															   priorities[1].OrderToExecute,
@@ -183,7 +219,7 @@ public class AICombatant : MonoBehaviour {
 		int totalRuns = priorityList.Count;
 
 		for (int i = 0; i < totalRuns; i++){
-			int maxSoFar = 0;
+			int maxSoFar = -1; //nonsense initialization; all CurrentPriorities should always be higher than this
 			Priority nextPriority = new Priority();
 
 			for (int j = 0; j < priorityList.Count; j++){
@@ -195,7 +231,7 @@ public class AICombatant : MonoBehaviour {
 
 			Debug.Assert(nextPriority.Name != "Default");
 
-			Debug.Log("Adding " + nextPriority.Name);
+			//Debug.Log("Adding " + nextPriority.Name);
 			temp.Add(nextPriority);
 			priorityList.Remove(nextPriority);
 		}
@@ -281,6 +317,7 @@ public class AICombatant : MonoBehaviour {
 		public override Result Tick(AICombatant context){
 			Debug.Log("Flee called");
 			context.myTaskManager.AddTask(new FleeTask(context, context.enemy, context.fleeDist));
+			context.flee.CurrentPriority = 0; //reset the flee priority after successfully fleeing
 
 			return Result.SUCCEED;
 		}
@@ -367,6 +404,7 @@ public class AICombatant : MonoBehaviour {
 											   Quaternion.LookRotation(target.position - transform.position,
 																	   Vector3.up),
 											   projectileOrganizer);
+		newProjectile.GetComponent<UnpooledProjectile>().MyCreator = gameObject;
 		
 		newProjectile.GetComponent<Rigidbody>().AddForce((target.position - transform.position).normalized * shotForce,
 														  ForceMode.Impulse);
@@ -389,6 +427,23 @@ public class AICombatant : MonoBehaviour {
 			health = startHealth;
 		}
 
-		healthBox.fillAmount = health/startHealth;
+		healthBox.fillAmount = (float)health/startHealth; 
+	}
+
+
+	/*----------------------------------------------------
+	 * Utility
+	 * 
+	 * Other methods this ship needs to operate
+	 * ----------------------------------------------------
+	 */
+
+
+	public void GetHit(int damage){
+		health -= damage;
+
+		healthBox.fillAmount = (float)health/startHealth;
+
+		flee.CurrentPriority += damage;
 	}
 }
