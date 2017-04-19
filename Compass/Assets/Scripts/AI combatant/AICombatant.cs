@@ -33,6 +33,12 @@ public class AICombatant : MonoBehaviour {
 	public float shotRange = 5.0f; //how close this ship has to be to its target in order to attack
 
 
+	//priorities
+	public int attackPriority = 1;
+	public int fleePriority = 2;
+	public int repairPriority = 3;
+
+
 
 	//----------Internal variables----------
 
@@ -120,7 +126,7 @@ public class AICombatant : MonoBehaviour {
 
 		attackSelector = new Selector<AICombatant>(launchSequence, pursueSequence);
 
-		return new Priority(ATTACK_NAME, attackSelector, 1);
+		return new Priority(ATTACK_NAME, attackSelector, attackPriority);
 	}
 
 
@@ -128,7 +134,7 @@ public class AICombatant : MonoBehaviour {
 		fleeSequence = new Sequence<AICombatant>(new IsTargetWithinFleeDistance(),
 												 new Flee());
 
-		return new Priority(FLEE_NAME, fleeSequence, 2);
+		return new Priority(FLEE_NAME, fleeSequence, fleePriority);
 	}
 
 
@@ -136,7 +142,7 @@ public class AICombatant : MonoBehaviour {
 		repairSequence = new Sequence<AICombatant>(new IsDamaged(),
 												  new Repair());
 
-		return new Priority(REPAIR_NAME, repairSequence, 3);
+		return new Priority(REPAIR_NAME, repairSequence, repairPriority);
 	}
 
 
@@ -147,9 +153,57 @@ public class AICombatant : MonoBehaviour {
 
 	public void ChooseNextTask(){
 		Debug.Log("ChooseNextTask() called");
+
+		Priority priority1;
+		Priority priority2;
+		Priority priority3;
+		List<Priority> priorities = new List<Priority>() { attack, flee, repair };
+
+		priorities = PutPrioritiesInOrder(priorities);
+
+
+		Debug.Log(priorities);
+
+		Node<AICombatant> order1;
+		Node<AICombatant> order2;
+		Node<AICombatant> order3;
+
 		tree = new Tree<AICombatant>(new Selector<AICombatant>(attackSelector, fleeSequence, repairSequence));
 
 		tree.Tick(this);
+	}
+
+
+	/// <summary>
+	/// Orders a list of priorities by their CurrentPriority field, high to low
+	/// </summary>
+	/// <returns>A list of priorities, ordered high to low.</returns>
+	/// <param name="priorityList">The list to be put in order.</param>
+	private List<Priority> PutPrioritiesInOrder(List<Priority> priorityList){
+		List<Priority> temp = new List<Priority>();
+
+		int totalRuns = priorityList.Count;
+
+		for (int i = 0; i < totalRuns; i++){
+			int maxSoFar = 0;
+			Priority nextPriority = new Priority();
+
+			for (int j = 0; j < priorityList.Count; j++){
+				if (priorityList[j].CurrentPriority > maxSoFar){
+					nextPriority = priorityList[j];
+					maxSoFar = priorityList[j].CurrentPriority;
+				}
+			}
+
+			Debug.Assert(nextPriority.Name != "Default");
+
+			temp.Add(nextPriority);
+			priorityList.Remove(nextPriority);
+		}
+
+		Debug.Assert(temp.Count > 0);
+
+		return temp;
 	}
 
 
@@ -279,6 +333,13 @@ public class AICombatant : MonoBehaviour {
 			Name = name;
 			OrderToExecute = order;
 			CurrentPriority = priority;
+		}
+
+
+		public Priority(){
+			Name = "Default";
+			OrderToExecute = null;
+			CurrentPriority = 0;
 		}
 	}
 
