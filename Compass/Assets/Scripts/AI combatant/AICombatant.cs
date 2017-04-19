@@ -164,11 +164,9 @@ public class AICombatant : MonoBehaviour {
 
 		Debug.Log(priorities);
 
-		Node<AICombatant> order1;
-		Node<AICombatant> order2;
-		Node<AICombatant> order3;
-
-		tree = new Tree<AICombatant>(new Selector<AICombatant>(attackSelector, fleeSequence, repairSequence));
+		tree = new Tree<AICombatant>(new Selector<AICombatant>(priorities[0].OrderToExecute,
+															   priorities[1].OrderToExecute,
+															   priorities[2].OrderToExecute));
 
 		tree.Tick(this);
 	}
@@ -197,6 +195,7 @@ public class AICombatant : MonoBehaviour {
 
 			Debug.Assert(nextPriority.Name != "Default");
 
+			Debug.Log("Adding " + nextPriority.Name);
 			temp.Add(nextPriority);
 			priorityList.Remove(nextPriority);
 		}

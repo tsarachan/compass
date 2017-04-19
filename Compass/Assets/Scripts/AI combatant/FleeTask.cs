@@ -21,8 +21,8 @@ public class FleeTask : Task {
 			SetStatus(TaskStatus.Aborted);
 		}
 
-		Debug.Log(myShip);
-		Debug.Log(fleeFrom);
+//		Debug.Log(myShip);
+//		Debug.Log(fleeFrom);
 	}
 
 
