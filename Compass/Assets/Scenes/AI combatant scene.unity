@@ -364,6 +364,24 @@ Prefab:
       propertyPath: m_LocalPosition.x
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 1237600367598676, guid: d9c50346c5cd74d8bba26cf390410e47, type: 2}
+      propertyPath: m_Name
+      value: AI combatant Red
+      objectReference: {fileID: 0}
+    - target: {fileID: 1047831840292106, guid: d9c50346c5cd74d8bba26cf390410e47, type: 2}
+      propertyPath: m_Name
+      value: AI combatant Blue
+      objectReference: {fileID: 0}
+    - target: {fileID: 114846991247208812, guid: d9c50346c5cd74d8bba26cf390410e47,
+        type: 2}
+      propertyPath: fleeDist
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 114846991247208812, guid: d9c50346c5cd74d8bba26cf390410e47,
+        type: 2}
+      propertyPath: shotRange
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d9c50346c5cd74d8bba26cf390410e47, type: 2}
   m_IsPrefabParent: 0
@@ -417,12 +435,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startHealth: 8
   speed: 0.25
-  fleeDist: 10
+  fleeDist: 7
   repairDelay: 1
   repairAmount: 1
   shotForce: 2
   shotDelay: 1
-  shotRange: 5
+  shotRange: 6
   attackPriority: 2
   fleePriority: 3
   repairPriority: 1

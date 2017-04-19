@@ -260,6 +260,8 @@ public class AICombatant : MonoBehaviour {
 
 
 	private void ReorderFlags(List<Priority> priorities){
+		Debug.Assert(priorities.Count == 3);
+
 		flag1.color = priorities[0].FlagColor;
 		flag2.color = priorities[1].FlagColor;
 		flag3.color = priorities[2].FlagColor;
@@ -282,7 +284,9 @@ public class AICombatant : MonoBehaviour {
 
 	private class IsTargetWithinFleeDistance : Node<AICombatant> {
 		public override Result Tick (AICombatant context){
-			Debug.Log("IsTargetWithinFleeDistance called");
+			if (context.gameObject.name.Contains(RED)){
+				//Debug.Log("IsTargetWithinFleeDistance called");
+			}
 			if (context.CheckIfWithinFleeDistance()){
 				return Result.SUCCEED;
 			} else {
@@ -299,7 +303,9 @@ public class AICombatant : MonoBehaviour {
 
 	private class IsDamaged : Node<AICombatant> {
 		public override Result Tick (AICombatant context){
-			Debug.Log("IsDamaged called");
+			if (context.gameObject.name.Contains(RED)){
+				//Debug.Log("IsDamaged called");
+			}
 			if (context.CheckIfDamaged()){
 				return Result.SUCCEED;
 			} else {
@@ -316,7 +322,9 @@ public class AICombatant : MonoBehaviour {
 
 	private class IsTargetInRange : Node<AICombatant> {
 		public override Result Tick (AICombatant context){
-			Debug.Log("IsTargetInRange called");
+			if (context.gameObject.name.Contains(RED)){
+				//Debug.Log("IsTargetInRange called");
+			}
 			if (context.CheckIfTargetInRange()){
 				return Result.SUCCEED;
 			} else {
@@ -339,7 +347,9 @@ public class AICombatant : MonoBehaviour {
 
 	private class Flee : Node<AICombatant> {
 		public override Result Tick(AICombatant context){
-			Debug.Log("Flee called");
+			if (context.gameObject.name.Contains(RED)){
+				Debug.Log("Flee called");
+			}
 			context.myTaskManager.AddTask(new FleeTask(context, context.enemy, context.fleeDist));
 			context.flee.CurrentPriority = 0; //reset the flee priority after successfully fleeing
 
@@ -350,7 +360,9 @@ public class AICombatant : MonoBehaviour {
 
 	private class Repair : Node<AICombatant> {
 		public override Result Tick(AICombatant context){
-			Debug.Log("Repair called");
+			if (context.gameObject.name.Contains(RED)){
+				Debug.Log("Repair called");
+			}
 			context.myTaskManager.AddTask(new RepairTask(context, context.repairAmount, context.repairDelay));
 
 			return Result.SUCCEED;
@@ -360,7 +372,9 @@ public class AICombatant : MonoBehaviour {
 
 	private class Pursue : Node<AICombatant> {
 		public override Result Tick(AICombatant context){
-			Debug.Log("Pursue called");
+			if (context.gameObject.name.Contains(RED)){
+				Debug.Log("Pursue called");
+			}
 			context.myTaskManager.AddTask(new PursueTask(context, context.enemy, context.shotRange));
 
 			return Result.SUCCEED;
@@ -370,7 +384,9 @@ public class AICombatant : MonoBehaviour {
 
 	private class Attack : Node<AICombatant> {
 		public override Result Tick (AICombatant context){
-			Debug.Log("Attack called");
+			if (context.gameObject.name.Contains(RED)){
+				Debug.Log("Attack called");
+			}
 			context.myTaskManager.AddTask(new AttackTask(context, context.enemy, context.shotDelay));
 
 			return Result.SUCCEED;
