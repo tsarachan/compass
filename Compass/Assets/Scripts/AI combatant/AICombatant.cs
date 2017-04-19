@@ -52,7 +52,7 @@ public class AICombatant : MonoBehaviour {
 	private int health;
 	private Image healthBox;
 	private const string CANVAS_OBJ = "Canvas";
-	private const string IMAGE_OBJ = "Image";
+	private const string HEALTH_IMAGE_OBJ = "Health fill";
 
 
 	private Rigidbody rb;
@@ -107,7 +107,7 @@ public class AICombatant : MonoBehaviour {
 		myTaskManager = new TaskManager();
 
 		health = startHealth;
-		healthBox = transform.Find(CANVAS_OBJ).Find(IMAGE_OBJ).GetComponent<Image>();
+		healthBox = transform.Find(CANVAS_OBJ).Find(HEALTH_IMAGE_OBJ).GetComponent<Image>();
 		rb = GetComponent<Rigidbody>();
 		projectile = Resources.Load(PROJECTILE_OBJ) as GameObject;
 		projectileOrganizer = GameObject.Find(PROJECTILE_ORGANIZER).transform;
@@ -416,7 +416,7 @@ public class AICombatant : MonoBehaviour {
 	public void TakeDamage(int damage){
 		health -= damage;
 
-		healthBox.fillAmount = health/startHealth;
+		healthBox.fillAmount = (float)health/startHealth;
 	}
 
 
@@ -440,9 +440,7 @@ public class AICombatant : MonoBehaviour {
 
 
 	public void GetHit(int damage){
-		health -= damage;
-
-		healthBox.fillAmount = (float)health/startHealth;
+		TakeDamage(damage);
 
 		flee.CurrentPriority += damage;
 	}

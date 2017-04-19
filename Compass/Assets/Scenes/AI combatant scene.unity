@@ -184,7 +184,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4482978638092262, guid: d9c50346c5cd74d8bba26cf390410e47, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -19.65
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 114846991247208812, guid: d9c50346c5cd74d8bba26cf390410e47,
         type: 2}
@@ -218,6 +218,15 @@ Prefab:
     - target: {fileID: 1047831840292106, guid: d9c50346c5cd74d8bba26cf390410e47, type: 2}
       propertyPath: m_TagString
       value: Blue
+      objectReference: {fileID: 0}
+    - target: {fileID: 114846991247208812, guid: d9c50346c5cd74d8bba26cf390410e47,
+        type: 2}
+      propertyPath: startHealth
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4130616897464772, guid: d9c50346c5cd74d8bba26cf390410e47, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d9c50346c5cd74d8bba26cf390410e47, type: 2}
@@ -270,7 +279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25221bf7c049b4075ada3d3df35ef98e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHealth: 10
+  startHealth: 8
   speed: 0.25
   fleeDist: 10
   repairDelay: 1
@@ -279,8 +288,8 @@ MonoBehaviour:
   shotDelay: 1
   shotRange: 5
   attackPriority: 2
-  fleePriority: 1
-  repairPriority: 3
+  fleePriority: 3
+  repairPriority: 1
 --- !u!1 &566394235
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,7 +334,7 @@ GameObject:
   - component: {fileID: 844970767}
   - component: {fileID: 844970766}
   m_Layer: 0
-  m_Name: Image
+  m_Name: Health fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -709,7 +718,7 @@ GameObject:
   - component: {fileID: 2101299832}
   - component: {fileID: 2101299831}
   m_Layer: 0
-  m_Name: Image
+  m_Name: Health fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
