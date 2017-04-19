@@ -84,6 +84,16 @@ public class AICombatant : MonoBehaviour {
 	private const string FLAG_3_OBJ = "Third priority flag";
 
 
+	//UI for priority
+	private Text attackUI;
+	private Text fleeUI;
+	private Text repairUI;
+	private const string ATTACK_UI_OBJ = "Attack priority";
+	private const string FLEE_UI_OBJ = "Flee priority";
+	private const string REPAIR_UI_OBJ = "Repair priority";
+	private const string CONTROLS_UI_OBJ = "Controls";
+
+
 	//priorities
 	#region priorities
 	private Priority attack;
@@ -135,6 +145,10 @@ public class AICombatant : MonoBehaviour {
 		attack = MakeAttackPriority();
 		flee = MakeFleePriority();
 		repair = MakeRepairPriority();
+
+		attackUI = transform.root.Find(CONTROLS_UI_OBJ).Find(ATTACK_UI_OBJ).GetComponent<Text>();
+		fleeUI = transform.root.Find(CONTROLS_UI_OBJ).Find(FLEE_UI_OBJ).GetComponent<Text>();
+		repairUI = transform.root.Find(CONTROLS_UI_OBJ).Find(REPAIR_UI_OBJ).GetComponent<Text>();
 	}
 
 
@@ -469,7 +483,65 @@ public class AICombatant : MonoBehaviour {
 			health = startHealth;
 		}
 
-		healthBox.fillAmount = (float)health/startHealth; 
+		healthBox.fillAmount = (float)health/startHealth;
+	}
+
+
+	/*----------------------------------------------------
+	 * Controls
+	 * 
+	 * Used to manipulate the ship's priorities
+	 * ----------------------------------------------------
+	 */
+
+	public void AttackPlus(){
+		attack.CurrentPriority++;
+
+		UpdateUI();
+	}
+
+	public void AttackMinus(){
+		attack.CurrentPriority--;
+
+		if (attack.CurrentPriority < 0){
+			attack.CurrentPriority = 0;
+		}
+
+		UpdateUI();
+	}
+
+
+	public void FleePlus(){
+		flee.CurrentPriority++;
+
+		UpdateUI();
+	}
+
+	public void FleeMinus(){
+		flee.CurrentPriority--;
+
+		if (flee.CurrentPriority < 0){
+			flee.CurrentPriority = 0;
+		}
+
+		UpdateUI();
+	}
+
+
+	public void RepairPlus(){
+		repair.CurrentPriority++;
+
+		UpdateUI();
+	}
+
+	public void RepairMinus(){
+		repair.CurrentPriority--;
+
+		if (repair.CurrentPriority < 0){
+			repair.CurrentPriority = 0;
+		}
+
+		UpdateUI();
 	}
 
 
@@ -485,5 +557,16 @@ public class AICombatant : MonoBehaviour {
 		TakeDamage(damage);
 
 		flee.CurrentPriority += damage;
+
+		UpdateUI();
+	}
+
+
+	public void UpdateUI(){
+		if (gameObject.tag == RED){
+			attackUI.text = attack.CurrentPriority.ToString();
+			fleeUI.text = flee.CurrentPriority.ToString();
+			repairUI.text = repair.CurrentPriority.ToString();
+		}
 	}
 }
