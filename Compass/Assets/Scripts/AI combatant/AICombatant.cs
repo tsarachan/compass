@@ -75,6 +75,15 @@ public class AICombatant : MonoBehaviour {
 	private const string AI_COMBATANT_OBJ = "AI combatant ";
 
 
+	//flags
+	private Image flag1;
+	private Image flag2;
+	private Image flag3;
+	private const string FLAG_1_OBJ = "Top priority flag";
+	private const string FLAG_2_OBJ = "Second priority flag";
+	private const string FLAG_3_OBJ = "Third priority flag";
+
+
 	//priorities
 	#region priorities
 	private Priority attack;
@@ -116,6 +125,11 @@ public class AICombatant : MonoBehaviour {
 
 
 		myTaskManager.AddTask(new AttackTask(this, enemy, shotDelay));
+
+
+		flag1 = transform.Find(CANVAS_OBJ).Find(FLAG_1_OBJ).GetComponent<Image>();
+		flag2 = transform.Find(CANVAS_OBJ).Find(FLAG_2_OBJ).GetComponent<Image>();
+		flag3 = transform.Find(CANVAS_OBJ).Find(FLAG_3_OBJ).GetComponent<Image>();
 
 
 		attack = MakeAttackPriority();
@@ -162,7 +176,7 @@ public class AICombatant : MonoBehaviour {
 
 		attackSelector = new Selector<AICombatant>(launchSequence, pursueSequence);
 
-		return new Priority(ATTACK_NAME, attackSelector, attackPriority);
+		return new Priority(ATTACK_NAME, attackSelector, attackPriority, Color.red);
 	}
 
 
@@ -170,7 +184,7 @@ public class AICombatant : MonoBehaviour {
 		fleeSequence = new Sequence<AICombatant>(new IsTargetWithinFleeDistance(),
 												 new Flee());
 
-		return new Priority(FLEE_NAME, fleeSequence, fleePriority);
+		return new Priority(FLEE_NAME, fleeSequence, fleePriority, Color.yellow);
 	}
 
 
@@ -178,7 +192,7 @@ public class AICombatant : MonoBehaviour {
 		repairSequence = new Sequence<AICombatant>(new IsDamaged(),
 												  new Repair());
 
-		return new Priority(REPAIR_NAME, repairSequence, repairPriority);
+		return new Priority(REPAIR_NAME, repairSequence, repairPriority, Color.blue);
 	}
 
 
@@ -196,6 +210,9 @@ public class AICombatant : MonoBehaviour {
 		List<Priority> priorities = new List<Priority>() { attack, flee, repair };
 
 		priorities = PutPrioritiesInOrder(priorities);
+
+
+		ReorderFlags(priorities);
 
 
 		//Debug.Log(priorities);
@@ -239,6 +256,13 @@ public class AICombatant : MonoBehaviour {
 		Debug.Assert(temp.Count > 0);
 
 		return temp;
+	}
+
+
+	private void ReorderFlags(List<Priority> priorities){
+		flag1.color = priorities[0].FlagColor;
+		flag2.color = priorities[1].FlagColor;
+		flag3.color = priorities[2].FlagColor;
 	}
 
 
@@ -363,12 +387,14 @@ public class AICombatant : MonoBehaviour {
 		public string Name { get; set; }
 		public Node<AICombatant> OrderToExecute { get; set; }
 		public int CurrentPriority { get; set; }
+		public Color FlagColor { get; set; }
 
 
-		public Priority(string name, Node<AICombatant> order, int priority){
+		public Priority(string name, Node<AICombatant> order, int priority, Color flagColor){
 			Name = name;
 			OrderToExecute = order;
 			CurrentPriority = priority;
+			FlagColor = flagColor;
 		}
 
 
