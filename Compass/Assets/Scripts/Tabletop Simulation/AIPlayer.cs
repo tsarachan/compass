@@ -19,6 +19,7 @@
 		/// This player's toy soldiers
 		////////////////////////////////////////////////////////////////////////
 		List<BaseMarine> myPieces = new List<BaseMarine>();
+		List<BaseMarine> piecesToLose = new List<BaseMarine>();
 
 
 		////////////////////////////////////////////////////////////////////////
@@ -35,6 +36,7 @@
 
 		//orders the AI player can execute
 		private Priority attack;
+		private Sequence<AIPlayer> attackSequence;
 		private Priority takeCover;
 		private Sequence<AIPlayer> takeCoverSequence;
 
@@ -87,10 +89,32 @@
 		////////////////////////////////////////////////////////////////////////
 
 
+		private class GeneralAdvance : Node<AIPlayer>{
+			public override Result Tick(AIPlayer context){
+				foreach (BaseMarine marine in context.myPieces){
+					marine.MoveTowardEnemy();
+				}
+
+				return Result.SUCCEED;
+			}
+		}
+
+
 		private class TakeCover : Node<AIPlayer>{
 			public override Result Tick(AIPlayer context){
 				foreach (BaseMarine marine in context.myPieces){
 					marine.SeekCover();
+				}
+
+				return Result.SUCCEED;
+			}
+		}
+
+
+		private class Attack : Node<AIPlayer>{
+			public override Result Tick(AIPlayer context){
+				foreach (BaseMarine marine in context.myPieces){
+					marine.TryToAttack();
 				}
 
 				return Result.SUCCEED;
@@ -145,7 +169,7 @@
 
 				Debug.Assert(nextPriority.Name != "Default");
 
-				Debug.Log("Adding " + nextPriority.Name);
+				//Debug.Log("Adding " + nextPriority.Name);
 				temp.Add(nextPriority);
 				priorityList.Remove(nextPriority);
 			}
@@ -153,6 +177,38 @@
 			Debug.Assert(temp.Count > 0);
 
 			return temp;
+		}
+
+
+		////////////////////////////////////////////////////////////////////////
+		/// Toy soldiers--functions that manage them
+		////////////////////////////////////////////////////////////////////////
+
+
+		public void LoseToySoldier(GameObject toySoldier){
+			piecesToLose.Add(toySoldier.GetComponent<BaseMarine>());
+			toySoldier.GetComponent<Renderer>().enabled = false;
+		}
+
+
+		public void CleanUpBoard(){
+			if (myPieces.Count > 0){
+				for (int i = myPieces.Count - 1; i >=0; i--){
+					foreach (BaseMarine piece in piecesToLose){
+						if (myPieces[i].gameObject == piece.gameObject){
+							GameObject temp = piece.gameObject;
+
+							myPieces.RemoveAt(i);
+
+							Destroy(temp);
+						}
+					}
+				}
+
+
+				piecesToLose.Clear();
+				Debug.Assert(piecesToLose.Count == 0);
+			}
 		}
 
 
@@ -166,7 +222,7 @@
 			myPieces = GetMyPieces();
 
 
-			attack = new Priority();
+			attack = MakeAttackPriority();
 			takeCover = MakeTakeCoverPriority();
 		}
 
@@ -189,8 +245,17 @@
 		}
 
 
+		private Priority MakeAttackPriority(){
+			attackSequence = new Sequence<AIPlayer>(new GeneralAdvance(),
+													new Attack());
+
+			return new Priority("Attack", attackSequence, attackDesire);
+		}
+
+
 		private Priority MakeTakeCoverPriority(){
-			takeCoverSequence = new Sequence<AIPlayer>(new TakeCover());
+			takeCoverSequence = new Sequence<AIPlayer>(new TakeCover(),
+													   new Attack());
 
 			return new Priority("TakeCover", takeCoverSequence, coverDesire);
 		}

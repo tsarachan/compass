@@ -29,6 +29,7 @@
 		protected AIPlayer.Factions enemyFaction;
 		protected bool inCover = false;
 		protected Rigidbody2D body;
+		protected AIPlayer myPlayer;
 
 
 
@@ -45,6 +46,7 @@
 			MyFaction = transform.parent.GetComponent<AIPlayer>().myFaction;
 			enemyFaction = GetOtherFaction();
 			body = GetComponent<Rigidbody2D>();
+			myPlayer = transform.parent.GetComponent<AIPlayer>();
 		}
 
 
@@ -57,12 +59,25 @@
 		}
 
 
-		public void Advance (Transform enemy){
+		////////////////////////////////////////////////////////////////////////
+		/// Movement
+		////////////////////////////////////////////////////////////////////////
+
+
+		public void MoveTowardEnemy(){
+			Transform closestEnemy = FindClosestEnemy();
+
+			Advance(closestEnemy);
+			Debug.Log(gameObject.name + " is moving toward " + closestEnemy.name);
+		}
+
+
+		protected void Advance (Transform enemy){
 			body.MovePosition(transform.position + (enemy.position - transform.position).normalized * Movement);
 		}
 
 
-		public void Retreat(Transform enemy){
+		protected void Retreat(Transform enemy){
 			body.MovePosition(transform.position + (transform.position - enemy.position).normalized * Movement);
 		}
 
@@ -92,22 +107,69 @@
 				body.MovePosition(transform.position + 
 					(closestCover.position - transform.position).normalized * Movement);
 			}
+
+			Debug.Log(gameObject.name + " took cover in " + closestCover.name);
 		}
 
 
-		public void Attack(Transform enemy){
-			if (Random.Range(1, 6) >= BallisticSkill){
-				enemy.GetComponent<BaseMarine>().GetHit(transform);
+		////////////////////////////////////////////////////////////////////////
+		/// Attacking
+		////////////////////////////////////////////////////////////////////////
+
+
+		public void TryToAttack(){
+			Transform closestEnemy = FindClosestEnemy();
+
+			if (Vector3.Distance(closestEnemy.position, transform.position) <= WeaponRange){
+				AttackRoll(closestEnemy);
 			}
 		}
+
+
+		protected Transform FindClosestEnemy(){
+			GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyFaction.ToString());
+
+			float minDist = 100000.0f; //nonsense initialization sure to be larger than at least one actual distance
+			Transform closestEnemy = transform; //nonsense initialization for debugging; should always be overridden
+
+			foreach (GameObject enemy in enemies){
+				float dist = Vector3.Distance(transform.position, enemy.transform.position);
+
+				if (dist < minDist){
+					closestEnemy = enemy.transform;
+					minDist = dist;
+				}
+			}
+
+			Debug.Assert(closestEnemy != transform);
+
+			return closestEnemy;
+		}
+
+
+		protected void AttackRoll(Transform enemy){
+			if (Random.Range(1, 6) >= BallisticSkill){
+				Debug.Log(gameObject.name + " hit " + enemy.name);
+				enemy.GetComponent<BaseMarine>().GetHit(transform);
+			} else {
+				Debug.Log(gameObject.name + " missed " + enemy.name);
+			}
+		}
+
+
+		////////////////////////////////////////////////////////////////////////
+		/// Getting hit and taking damage
+		////////////////////////////////////////////////////////////////////////
 
 
 		public void GetHit(Transform enemy){
 			int targetNum = Save + CoverSaveMod - enemy.GetComponent<BaseMarine>().WeaponAP;
 
 			if (Random.Range(1, 6) >= targetNum){
+				Debug.Log(gameObject.name + " made its armor save");
 				return;
 			} else {
+				Debug.Log(gameObject.name + " failed its armor save");
 				TakeDamage(enemy.GetComponent<BaseMarine>().WeaponDamage);
 			}
 		}
@@ -117,9 +179,14 @@
 			Wounds -= amount;
 
 			if (Wounds <= 0){
-				Destroy(gameObject);
+				myPlayer.LoseToySoldier(gameObject);
 			}
 		}
+
+
+		////////////////////////////////////////////////////////////////////////
+		/// Cover system
+		////////////////////////////////////////////////////////////////////////
 
 
 		protected virtual void OnTriggerEnter2D(Collider2D other){

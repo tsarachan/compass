@@ -15,12 +15,14 @@
 		private AIPlayer deathGuardPlayer;
 		private const string DEATH_GUARD_OBJ = "Death Guard";
 		private AIPlayer currentPlayer;
+		private AIPlayer inactivePlayer;
 
 
 		private void Start(){
 			ultramarinePlayer = GameObject.Find(ULTRAMARINE_OBJ).GetComponent<AIPlayer>();
 			deathGuardPlayer = GameObject.Find(DEATH_GUARD_OBJ).GetComponent<AIPlayer>();
 			currentPlayer = ChooseRandomStartPlayer();
+			inactivePlayer = GetInactivePlayer();
 		}
 
 
@@ -29,6 +31,14 @@
 				return ultramarinePlayer;
 			} else {
 				return deathGuardPlayer;
+			}
+		}
+
+		private AIPlayer GetInactivePlayer(){
+			if (currentPlayer == ultramarinePlayer){
+				return deathGuardPlayer;
+			} else {
+				return ultramarinePlayer;
 			}
 		}
 
@@ -44,7 +54,9 @@
 
 			if (turnTimer >= turnDuration){
 				currentPlayer.ChooseAction();
+				inactivePlayer.CleanUpBoard();
 				currentPlayer = TakeTurns();
+				inactivePlayer = GetInactivePlayer();
 				turnTimer = 0.0f;
 			}
 

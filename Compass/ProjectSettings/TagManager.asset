@@ -7,6 +7,9 @@ TagManager:
   - Enemy
   - Red
   - Blue
+  - Cover
+  - Ultramarines
+  - DeathGuard
   layers:
   - Default
   - TransparentFX
