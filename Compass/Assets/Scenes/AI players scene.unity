@@ -2287,8 +2287,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myFaction: 0
-  attackDesire: 1
-  coverDesire: 2
+  attackDesire: 2
+  coverDesire: 1
   takeCoverThreshold: 11
 --- !u!1 &1357888178
 GameObject:

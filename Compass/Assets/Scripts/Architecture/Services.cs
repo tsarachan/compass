@@ -41,4 +41,23 @@ public abstract class Services {
 		}
 		set { prefabDatabase = value; }
 	}
+
+
+	private static TabletopSimulator.VictoryChecker victoryChecker;
+	public static TabletopSimulator.VictoryChecker VictoryChecker{
+		get {
+			Debug.Assert(victoryChecker != null);
+			return victoryChecker;
+		}
+		set { victoryChecker = value; }
+	}
+
+
+	private static TabletopSimulator.TurnManager turnManager;
+	public static TabletopSimulator.TurnManager TurnManager{
+		get {
+			Debug.Assert(turnManager != null);
+			return turnManager;
+		} set { turnManager = value; }
+	}
 }

@@ -18,8 +18,8 @@
 		////////////////////////////////////////////////////////////////////////
 		/// This player's toy soldiers
 		////////////////////////////////////////////////////////////////////////
-		List<BaseMarine> myPieces = new List<BaseMarine>();
-		List<BaseMarine> piecesToLose = new List<BaseMarine>();
+		private List<BaseMarine> myPieces = new List<BaseMarine>();
+		private List<BaseMarine> piecesToLose = new List<BaseMarine>();
 
 
 		////////////////////////////////////////////////////////////////////////
@@ -186,8 +186,10 @@
 
 
 		public void LoseToySoldier(GameObject toySoldier){
-			piecesToLose.Add(toySoldier.GetComponent<BaseMarine>());
-			toySoldier.GetComponent<Renderer>().enabled = false;
+			if (!piecesToLose.Contains(toySoldier.GetComponent<BaseMarine>())){
+				piecesToLose.Add(toySoldier.GetComponent<BaseMarine>());
+				toySoldier.GetComponent<Renderer>().enabled = false;
+			}
 		}
 
 

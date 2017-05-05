@@ -4,12 +4,19 @@
 	using System.Collections.Generic;
 	using UnityEngine;
 
-	public class TurnManager : MonoBehaviour {
+	public class TurnManager {
 
+
+		////////////////////////////////////////////////////////////////////////
+		/// How long does the game pause each turn?
+		////////////////////////////////////////////////////////////////////////
 		public float turnDuration = 1.0f;
 		private float turnTimer = 0.0f;
 
 
+		////////////////////////////////////////////////////////////////////////
+		/// Players
+		////////////////////////////////////////////////////////////////////////
 		private AIPlayer ultramarinePlayer;
 		private const string ULTRAMARINE_OBJ = "Ultramarines";
 		private AIPlayer deathGuardPlayer;
@@ -18,9 +25,19 @@
 		private AIPlayer inactivePlayer;
 
 
-		private void Start(){
+		////////////////////////////////////////////////////////////////////////
+		/// Functions
+		////////////////////////////////////////////////////////////////////////
+
+
+		public void Setup(){
 			ultramarinePlayer = GameObject.Find(ULTRAMARINE_OBJ).GetComponent<AIPlayer>();
 			deathGuardPlayer = GameObject.Find(DEATH_GUARD_OBJ).GetComponent<AIPlayer>();
+			StartNewGame();
+		}
+
+
+		public void StartNewGame(){
 			currentPlayer = ChooseRandomStartPlayer();
 			inactivePlayer = GetInactivePlayer();
 		}
@@ -48,7 +65,7 @@
 		}
 
 
-		private void Update(){
+		public void Tick(){
 
 			turnTimer += Time.deltaTime;
 
