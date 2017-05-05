@@ -3,6 +3,7 @@
 	using BehaviorTree;
 	using System.Collections;
 	using System.Collections.Generic;
+	using System.Linq;
 	using UnityEngine;
 
 	public class AIPlayer : MonoBehaviour {
@@ -197,12 +198,15 @@
 			if (myPieces.Count > 0){
 				for (int i = myPieces.Count - 1; i >=0; i--){
 					foreach (BaseMarine piece in piecesToLose){
+						Debug.Log("Testing " + myPieces[i].gameObject.name + " against " + piece.gameObject.name);
 						if (myPieces[i].gameObject == piece.gameObject){
 							GameObject temp = piece.gameObject;
 
 							myPieces.RemoveAt(i);
-
+		
 							Destroy(temp);
+
+							break;
 						}
 					}
 				}
@@ -245,7 +249,6 @@
 
 			foreach (GameObject piece in pieces){
 				temp.Add(piece.GetComponent<BaseMarine>());
-				Debug.Log("Adding " + piece.name + " to " + gameObject.name);
 			}
 
 			return temp;

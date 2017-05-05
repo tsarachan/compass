@@ -1,7 +1,7 @@
 ﻿namespace TabletopSimulator
 {
 	using System.Collections;
-	using System.Collections.Generic;
+	using TMPro;
 	using UnityEngine;
 
 	public class SimulationManager : MonoBehaviour {
@@ -16,6 +16,12 @@
 			get { return gamesRemaining; }
 			private set { gamesRemaining = value; }
 		}
+
+
+		////////////////////////////////////////////////////////////////////////
+		/// How long should each simulated turn last?
+		////////////////////////////////////////////////////////////////////////
+		public float turnDuration = 0.1f;
 
 
 		///////////////////////////////////////////////////////////////////////
@@ -43,12 +49,28 @@
 		private const string DEATH_GUARD_PLAYER = "Death Guard";
 
 
+
+		////////////////////////////////////////////////////////////////////////
+		/// UI
+		////////////////////////////////////////////////////////////////////////
+		private TextMeshProUGUI ultramarineText;
+		private const string ULTRAMARINE_TEXT_OBJ = "Ultramarine win info";
+		private TextMeshProUGUI deathGuardText;
+		private const string DEATH_GUARD_TEXT_OBJ = "Death Guard win info";
+		private const string ULTRAMARINE_WIN_TOTAL = "Ultramarine wins: ";
+		private const string DEATH_GUARD_WIN_TOTAL = "Death Guard wins: ";
+		private const string TABLED = "Tabled opponent: ";
+		private const string SCORE = "Score: ";
+
+
 		private void Awake(){
 			Services.TurnManager = new TurnManager();
-			Services.TurnManager.Setup();
+			Services.TurnManager.Setup(turnDuration);
 			Services.VictoryChecker = new VictoryChecker();
 			Services.BoardManager = new BoardManager();
 			Services.BoardManager.Setup();
+			ultramarineText = GameObject.Find(ULTRAMARINE_TEXT_OBJ).GetComponent<TextMeshProUGUI>();
+			deathGuardText = GameObject.Find(DEATH_GUARD_TEXT_OBJ).GetComponent<TextMeshProUGUI>();
 		}
 
 
@@ -73,13 +95,15 @@
 				BeginSimulation();
 			}
 
-			if (gamesRemaining > 0){
+			if (gamesRemaining >= 0){
 				Services.TurnManager.Tick();
 				if (Services.VictoryChecker.CheckUltramarineVictory()){
 					HandleUltramarineVictory();
+					ChangeUltramarineText();
 					StartNewGame();
 				} else if (Services.VictoryChecker.CheckDeathGuardVictory()){
 					HandleDeathGuardVictory();
+					ChangeDeathGuardText();
 					StartNewGame();
 				}
 			}
@@ -105,6 +129,20 @@
 			} else {
 				ultramarinesTabledWins++;
 			}
+		}
+
+
+		private void ChangeUltramarineText(){
+			ultramarineText.text = ULTRAMARINE_WIN_TOTAL + ultramarineWins.ToString() + "\n"
+								   + TABLED + deathGuardTabledWins.ToString() + "\n"
+								   + SCORE + ultramarineScoreWins.ToString();
+		}
+
+
+		private void ChangeDeathGuardText(){
+			deathGuardText.text = DEATH_GUARD_WIN_TOTAL + deathGuardWins.ToString() + "\n"
+								  + TABLED + ultramarinesTabledWins.ToString() + "\n"
+								  + SCORE + deathGuardScoreWins.ToString();
 		}
 	}
 }

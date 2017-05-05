@@ -8,9 +8,9 @@
 
 
 		////////////////////////////////////////////////////////////////////////
-		/// How long does the game pause each turn?
+		/// How long does the simulation pause each turn?
 		////////////////////////////////////////////////////////////////////////
-		public float turnDuration = 1.0f;
+		public float TurnDuration { get; set; }
 		private float turnTimer = 0.0f;
 
 
@@ -30,9 +30,10 @@
 		////////////////////////////////////////////////////////////////////////
 
 
-		public void Setup(){
+		public void Setup(float turnDuration){
 			ultramarinePlayer = GameObject.Find(ULTRAMARINE_OBJ).GetComponent<AIPlayer>();
 			deathGuardPlayer = GameObject.Find(DEATH_GUARD_OBJ).GetComponent<AIPlayer>();
+			TurnDuration = turnDuration;
 			StartNewGame();
 		}
 
@@ -69,7 +70,7 @@
 
 			turnTimer += Time.deltaTime;
 
-			if (turnTimer >= turnDuration){
+			if (turnTimer >= TurnDuration){
 				currentPlayer.ChooseAction();
 				inactivePlayer.CleanUpBoard();
 				currentPlayer = TakeTurns();
