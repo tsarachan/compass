@@ -68,7 +68,6 @@
 			Transform closestEnemy = FindClosestEnemy();
 
 			Advance(closestEnemy);
-			Debug.Log(gameObject.name + " is moving toward " + closestEnemy.name);
 		}
 
 
@@ -107,8 +106,6 @@
 				body.MovePosition(transform.position + 
 					(closestCover.position - transform.position).normalized * Movement);
 			}
-
-			Debug.Log(gameObject.name + " took cover in " + closestCover.name);
 		}
 
 
@@ -149,10 +146,8 @@
 
 		protected void AttackRoll(Transform enemy){
 			if (Random.Range(1, 6) >= BallisticSkill){
-				Debug.Log(gameObject.name + " hit " + enemy.name);
 				enemy.GetComponent<BaseMarine>().GetHit(transform);
 			} else {
-				Debug.Log(gameObject.name + " missed " + enemy.name);
 			}
 		}
 
@@ -166,10 +161,8 @@
 			int targetNum = Save + CoverSaveMod - enemy.GetComponent<BaseMarine>().WeaponAP;
 
 			if (Random.Range(1, 6) >= targetNum){
-				Debug.Log(gameObject.name + " made its armor save");
 				return;
 			} else {
-				Debug.Log(gameObject.name + " failed its armor save");
 				TakeDamage(enemy.GetComponent<BaseMarine>().WeaponDamage);
 			}
 		}

@@ -220,7 +220,11 @@
 
 
 		//initialize variables
-		private void Start(){
+		public void Setup(){
+			//get rid of any lists from the previous simulation
+			myPieces.Clear();
+			piecesToLose.Clear();
+
 			myPieces = GetMyPieces();
 
 
@@ -241,6 +245,7 @@
 
 			foreach (GameObject piece in pieces){
 				temp.Add(piece.GetComponent<BaseMarine>());
+				Debug.Log("Adding " + piece.name + " to " + gameObject.name);
 			}
 
 			return temp;

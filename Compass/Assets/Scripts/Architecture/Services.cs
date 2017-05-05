@@ -60,4 +60,13 @@ public abstract class Services {
 			return turnManager;
 		} set { turnManager = value; }
 	}
+
+
+	private static TabletopSimulator.BoardManager boardManager;
+	public static TabletopSimulator.BoardManager BoardManager{
+		get {
+			Debug.Assert(boardManager != null);
+			return boardManager;
+		} set { boardManager = value; }
+	}
 }
