@@ -60,6 +60,15 @@
 		}
 
 
+		public SimulationManager.VictoryType GetUltramarineVictoryType(){
+			if (ultramarineScore >= winScore){
+				return SimulationManager.VictoryType.Score;
+			} else {
+				return SimulationManager.VictoryType.TabledOpponent;
+			}
+		}
+
+
 		public bool CheckDeathGuardVictory(){
 			ultramarinesRemaining = GameObject.FindGameObjectsWithTag(ULTRAMARINE_TAG).Length;
 
@@ -68,6 +77,15 @@
 				return true;
 			} else {
 				return false;
+			}
+		}
+
+
+		public SimulationManager.VictoryType GetDeathGuardVictoryType(){
+			if (deathGuardScore >= winScore){
+				return SimulationManager.VictoryType.Score;
+			} else {
+				return SimulationManager.VictoryType.TabledOpponent;
 			}
 		}
 	}

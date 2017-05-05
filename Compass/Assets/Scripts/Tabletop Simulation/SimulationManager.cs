@@ -6,6 +6,32 @@
 
 	public class SimulationManager : MonoBehaviour {
 
+
+		////////////////////////////////////////////////////////////////////////
+		/// How many games do you want to simulate?
+		////////////////////////////////////////////////////////////////////////
+		public int gamesToPlay = 100;
+
+
+		///////////////////////////////////////////////////////////////////////
+		/// How many games has each player won so far, and how did they win?
+		////////////////////////////////////////////////////////////////////////
+		private int ultramarineWins = 0;
+		private int deathGuardTabledWins = 0;
+		private int ultramarineScoreWins = 0;
+
+		private int deathGuardWins = 0;
+		private int ultramarinesTabledWins = 0;
+		private int deathGuardScoreWins = 0;
+
+
+		///////////////////////////////////////////////////////////////////////
+		/// Enum for describing types of victory
+		////////////////////////////////////////////////////////////////////////
+		public enum VictoryType { TabledOpponent, Score };
+
+
+
 		private void Awake(){
 			Services.TurnManager = new TurnManager();
 			Services.TurnManager.Setup();
@@ -23,9 +49,31 @@
 		private void Update(){
 			Services.TurnManager.Tick();
 			if (Services.VictoryChecker.CheckUltramarineVictory()){
-				Debug.Log("Ultramarines win!");
+				HandleUltramarineVictory();
 			} else if (Services.VictoryChecker.CheckDeathGuardVictory()){
-				Debug.Log("Death Guard wins!");
+				HandleDeathGuardVictory();
+			}
+		}
+
+
+		private void HandleUltramarineVictory(){
+			ultramarineWins++;
+
+			if (Services.VictoryChecker.GetUltramarineVictoryType() == VictoryType.Score){
+				ultramarineScoreWins++;
+			} else {
+				deathGuardTabledWins++;
+			}
+		}
+
+
+		private void HandleDeathGuardVictory(){
+			deathGuardWins++;
+
+			if (Services.VictoryChecker.GetDeathGuardVictoryType() == VictoryType.Score){
+				deathGuardScoreWins++;
+			} else {
+				ultramarinesTabledWins++;
 			}
 		}
 	}
