@@ -71,7 +71,11 @@
 		private TextMeshProUGUI firstMoverText;
 		private const string FIRST_MOVER_TEXT_OBJ = "First mover win info";
 		private const string FIRST_MOVER_WIN_TOTAL = "First mover wins: ";
+		private const string UM_FIRST_MOVER_TOTAL = "UM first mover wins: ";
+		private const string DG_FIRST_MOVER_TOTAL = "DG first mover wins: ";
 		private int firstMoverWins = 0;
+		private int umFirstMoverWins = 0;
+		private int dgFirstMoverWins = 0;
 
 
 		////////////////////////////////////////////////////////////////////////
@@ -170,11 +174,17 @@
 		private string CheckForFirstPlayerVictory(Factions faction){
 			if (faction == CurrentStartPlayer){
 				firstMoverWins++;
+
+				if (faction == Factions.Ultramarines){
+					umFirstMoverWins++;
+				} else {
+					dgFirstMoverWins++;
+				}
 			}
 
-			Debug.Log("Winner was " + faction.ToString() + ", start player was " + CurrentStartPlayer.ToString());
-
-			return FIRST_MOVER_WIN_TOTAL + firstMoverWins.ToString();
+			return FIRST_MOVER_WIN_TOTAL + firstMoverWins.ToString() + "\n"
+				+ UM_FIRST_MOVER_TOTAL + umFirstMoverWins.ToString() + "\n"
+				+ DG_FIRST_MOVER_TOTAL + dgFirstMoverWins.ToString();
 		}
 	}
 }
