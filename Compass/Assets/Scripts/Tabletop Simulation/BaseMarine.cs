@@ -145,9 +145,15 @@
 
 
 		protected void AttackRoll(Transform enemy){
-			if (Random.Range(1, 6) >= BallisticSkill){
+			if (Random.Range(1, 7) >= BallisticSkill){
+				WoundRoll(enemy);
+			}
+		}
+
+
+		protected void WoundRoll(Transform enemy){
+			if (Random.Range(1, 7) >= 4){
 				enemy.GetComponent<BaseMarine>().GetHit(transform);
-			} else {
 			}
 		}
 
@@ -160,7 +166,7 @@
 		public void GetHit(Transform enemy){
 			int targetNum = Save + CoverSaveMod - enemy.GetComponent<BaseMarine>().WeaponAP;
 
-			if (Random.Range(1, 6) >= targetNum){
+			if (Random.Range(1, 7) >= targetNum){
 				return;
 			} else {
 				TakeDamage(enemy.GetComponent<BaseMarine>().WeaponDamage);

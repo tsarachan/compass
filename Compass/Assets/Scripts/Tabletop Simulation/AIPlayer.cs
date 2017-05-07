@@ -198,7 +198,6 @@
 			if (myPieces.Count > 0){
 				for (int i = myPieces.Count - 1; i >=0; i--){
 					foreach (BaseMarine piece in piecesToLose){
-						Debug.Log("Testing " + myPieces[i].gameObject.name + " against " + piece.gameObject.name);
 						if (myPieces[i].gameObject == piece.gameObject){
 							GameObject temp = piece.gameObject;
 

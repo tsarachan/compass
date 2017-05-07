@@ -42,6 +42,13 @@
 		public enum VictoryType { TabledOpponent, Score };
 
 
+		///////////////////////////////////////////////////////////////////////
+		/// Variables for tracking whether the first mover won
+		////////////////////////////////////////////////////////////////////////
+		public enum Factions { Ultramarines, DeathGuard };
+		public Factions CurrentStartPlayer { get; set; }
+
+
 		////////////////////////////////////////////////////////////////////////
 		/// Players
 		////////////////////////////////////////////////////////////////////////
@@ -61,6 +68,16 @@
 		private const string DEATH_GUARD_WIN_TOTAL = "Death Guard wins: ";
 		private const string TABLED = "Tabled opponent: ";
 		private const string SCORE = "Score: ";
+		private TextMeshProUGUI firstMoverText;
+		private const string FIRST_MOVER_TEXT_OBJ = "First mover win info";
+		private const string FIRST_MOVER_WIN_TOTAL = "First mover wins: ";
+		private int firstMoverWins = 0;
+
+
+		////////////////////////////////////////////////////////////////////////
+		/// Control whether the simulation has begun
+		////////////////////////////////////////////////////////////////////////
+		private bool simHasStarted = false;
 
 
 		private void Awake(){
@@ -71,6 +88,7 @@
 			Services.BoardManager.Setup();
 			ultramarineText = GameObject.Find(ULTRAMARINE_TEXT_OBJ).GetComponent<TextMeshProUGUI>();
 			deathGuardText = GameObject.Find(DEATH_GUARD_TEXT_OBJ).GetComponent<TextMeshProUGUI>();
+			firstMoverText = GameObject.Find(FIRST_MOVER_TEXT_OBJ).GetComponent<TextMeshProUGUI>();
 		}
 
 
@@ -91,21 +109,24 @@
 
 
 		private void Update(){
-			if (Input.anyKeyDown){
-				BeginSimulation();
-			}
-
-			if (gamesRemaining >= 0){
+			if (gamesRemaining >= 0 && simHasStarted){
 				Services.TurnManager.Tick();
 				if (Services.VictoryChecker.CheckUltramarineVictory()){
 					HandleUltramarineVictory();
 					ChangeUltramarineText();
+					firstMoverText.text = CheckForFirstPlayerVictory(Factions.Ultramarines);
 					StartNewGame();
 				} else if (Services.VictoryChecker.CheckDeathGuardVictory()){
 					HandleDeathGuardVictory();
 					ChangeDeathGuardText();
+					firstMoverText.text = CheckForFirstPlayerVictory(Factions.DeathGuard);
 					StartNewGame();
 				}
+			}
+
+			if (Input.anyKeyDown){
+				BeginSimulation();
+				simHasStarted = true;
 			}
 		}
 
@@ -143,6 +164,17 @@
 			deathGuardText.text = DEATH_GUARD_WIN_TOTAL + deathGuardWins.ToString() + "\n"
 								  + TABLED + ultramarinesTabledWins.ToString() + "\n"
 								  + SCORE + deathGuardScoreWins.ToString();
+		}
+
+
+		private string CheckForFirstPlayerVictory(Factions faction){
+			if (faction == CurrentStartPlayer){
+				firstMoverWins++;
+			}
+
+			Debug.Log("Winner was " + faction.ToString() + ", start player was " + CurrentStartPlayer.ToString());
+
+			return FIRST_MOVER_WIN_TOTAL + firstMoverWins.ToString();
 		}
 	}
 }

@@ -26,6 +26,13 @@
 
 
 		////////////////////////////////////////////////////////////////////////
+		/// The simulation manager, so that we can track who went first each game
+		////////////////////////////////////////////////////////////////////////
+		private SimulationManager simManager;
+		private const string MANAGER_OBJ = "Game manager";
+
+
+		////////////////////////////////////////////////////////////////////////
 		/// Functions
 		////////////////////////////////////////////////////////////////////////
 
@@ -34,6 +41,7 @@
 			ultramarinePlayer = GameObject.Find(ULTRAMARINE_OBJ).GetComponent<AIPlayer>();
 			deathGuardPlayer = GameObject.Find(DEATH_GUARD_OBJ).GetComponent<AIPlayer>();
 			TurnDuration = turnDuration;
+			simManager = GameObject.Find(MANAGER_OBJ).GetComponent<SimulationManager>();
 			StartNewGame();
 		}
 
@@ -41,6 +49,7 @@
 		public void StartNewGame(){
 			currentPlayer = ChooseRandomStartPlayer();
 			inactivePlayer = GetInactivePlayer();
+			simManager.CurrentStartPlayer = ReportCurrentStartPlayer();
 		}
 
 
@@ -61,8 +70,17 @@
 		}
 
 
+		private SimulationManager.Factions ReportCurrentStartPlayer(){
+			if (currentPlayer == ultramarinePlayer){
+				return SimulationManager.Factions.Ultramarines;
+			} else {
+				return SimulationManager.Factions.DeathGuard;
+			}
+		}
+
+
 		private int OneOrNegativeOne(){
-			return Random.Range(0, 1) * 2 - 1;
+			return Random.Range(0, 2) * 2 - 1;
 		}
 
 
